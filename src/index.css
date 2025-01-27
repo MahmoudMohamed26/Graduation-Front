@@ -7,3 +7,8 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+:focus.special_shadow {
+    box-shadow: #ccc4ff 0px 0px 2px 1px;
+
+}
