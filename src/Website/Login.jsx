@@ -1,5 +1,5 @@
 export default function Login(){
     return(
-        <div>test</div>
+        <div className="bg-red-700">test</div>
     )
 }
