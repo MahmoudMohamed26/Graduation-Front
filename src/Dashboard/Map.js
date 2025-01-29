@@ -113,7 +113,7 @@ export default function Map() {
 
     return (
         <div>
-            <div id="map" className="w-full h-[calc(100vh-74px-40px)]"></div>
+            <div id="map" className="w-full h-[calc(100vh-74px-40px)] relative z-10"></div>
         </div>
     );
 }
