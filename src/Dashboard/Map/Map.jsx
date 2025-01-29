@@ -1,21 +1,17 @@
 import { useEffect } from "react";
-import L from "leaflet"; // Import Leaflet
-import "leaflet/dist/leaflet.css"; // Import Leaflet styles
-import markerIcon from "leaflet/dist/images/marker-icon.png"; // Import marker icon
-import markerShadow from "leaflet/dist/images/marker-shadow.png"; // Import marker shadow
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 export default function Map() {
     useEffect(() => {
-        // Initialize map
-        const map = L.map("map").setView([30.4662, 31.1845], 9); // Centered on Banha/Qalyubia with zoom 9
+        const map = L.map("map").setView([30.4662, 31.1845], 9);
 
-        // Add OpenStreetMap tiles
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            noWrap: true // Prevents map from repeating when zooming out
+            noWrap: true
         }).addTo(map);
         
-        // Custom marker icon
         const customIcon = L.icon({
             iconUrl: markerIcon ,
             shadowUrl: markerShadow ,
@@ -26,7 +22,6 @@ export default function Map() {
         });
         
 
-        // Markers data for reports
         const markers = [
             { lat: 30.4674, lng: 31.1848, place: "Benha" },
             { lat: 30.4674, lng: 31.1848, place: "Benha" },
@@ -41,79 +36,78 @@ export default function Map() {
             { lat: 30.0444, lng: 31.2357, place: "Downtown Cairo" }
         ];
 
-        // Count reports per city
         const cityReportCount = {};
         markers.forEach(({ place }) => {
             cityReportCount[place] = (cityReportCount[place] || 0) + 1;
         });
 
-        // Add markers to the map for reports
         markers.forEach(({ lat, lng, place }) => {
             L.marker([lat, lng], { icon: customIcon })
                 .addTo(map)
                 .bindPopup(`<b>Report</b><br>Location: ${place}`);
         });
 
-        // Function to handle overlay colors based on reports
         const handleOverlayColor = (reportCount) => {
             if (reportCount > 5) return { color: "red", fillColor: "red" };
             if (reportCount <= 2) return { color: "green", fillColor: "green" };
             if (reportCount <= 5 && reportCount > 2) return { color: "#ff9800", fillColor: "#ffc107" };
-            return { color: "blue", fillColor: "lightblue" }; // Default case
+            return { color: "blue", fillColor: "lightblue" };
         };
 
-        // Load and display Qalyubia GeoJSON boundary (no markers for governorate)
-        fetch("/qalyubia.json") // Load from public folder
+        fetch("/qalyubia.json")
         .then(response => response.json())
         .then(geojsonData => {
-            const qalyubiaReportCount = cityReportCount["Benha"] + cityReportCount["Obour"] || 0; // Get report count for Qalyubia
+            if (!geojsonData || !geojsonData.features) {
+                throw new Error("Invalid GeoJSON data for Qalyubia.");
+            }
+
+            const qalyubiaReportCount = (cityReportCount["Benha"] || 0) + (cityReportCount["Obour"] || 0);
             const overlayStyle = handleOverlayColor(qalyubiaReportCount);
 
-            // Only add polygons and prevent adding unwanted markers
             L.geoJSON(geojsonData, {
-                style: {
+                style: (feature) => ({
                     color: overlayStyle.color,
                     weight: 2,
                     opacity: 0.6,
                     fillColor: overlayStyle.fillColor,
                     fillOpacity: 0.3
-                },
-                // Filter out unwanted marker features from GeoJSON (e.g., if there's a point geometry)
-                filter: (feature) => feature.geometry.type !== 'Point' // Only allow features that are not points
+                }),
+                filter: (feature) => feature.geometry && feature.geometry.type !== "Point"
             }).addTo(map).bindPopup("<b>Qalyubia Governorate</b>");
         })
         .catch(error => console.error("Error loading Qalyubia GeoJSON:", error));
 
-        // Load and display Cairo GeoJSON boundary (no markers for governorate)
-        fetch("/cairo.json") // Load from public folder
+        fetch("/cairo.json")
         .then(response => response.json())
         .then(geojsonData => {
-            const cairoReportCount = cityReportCount["Nasr City"] || 0; // Get report count for Cairo
+            if (!geojsonData || !geojsonData.features) {
+                throw new Error("Invalid GeoJSON data for Cairo.");
+            }
+
+            const cairoReportCount = cityReportCount["Nasr City"] || 0;
             const overlayStyle = handleOverlayColor(cairoReportCount);
 
-            // Only add polygons and prevent adding unwanted markers
             L.geoJSON(geojsonData, {
-                style: {
+                style: (feature) => ({
                     color: overlayStyle.color,
                     weight: 2,
                     opacity: 0.6,
                     fillColor: overlayStyle.fillColor,
                     fillOpacity: 0.3
-                },
-                // Filter out unwanted marker features from GeoJSON (e.g., if there's a point geometry)
-                filter: (feature) => feature.geometry.type !== 'Point' // Only allow features that are not points
+                }),
+                filter: (feature) => feature.geometry && feature.geometry.type !== "Point"
             }).addTo(map).bindPopup("<b>Cairo Governorate</b>");
         })
         .catch(error => console.error("Error loading Cairo GeoJSON:", error));
 
         return () => {
-            map.remove(); // Cleanup map on unmount
+            map.remove();
         };
     }, []);
 
     return (
         <div>
-            <div id="map" className="w-full h-[calc(100vh-74px-40px)]"></div>
+            <div id="map" className="w-full h-[calc(100vh-74px-40px)] relative z-10"></div>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Input from "./Components/Input";
+import Input from "../Components/Input";
 
 export default function AddAdmin() {
     const [firstName, setFirstName] = useState('');
@@ -11,7 +11,7 @@ export default function AddAdmin() {
     const [city, setCity] = useState('');
     return (
         <div>
-            <div className="flex justify-end">
+            <div className="flex">
                 <h1 className="w-fit text-4xl relative before:absolute before:h-[1px] before:w-[calc(100%)] before:bg-slate-300 before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0">اضافة مشرف</h1>
             </div>
             <div className="bg-white mt-10 px-2 text-right rounded-sm">

@@ -6,6 +6,8 @@ import { RiAdminLine } from "react-icons/ri";
 import { ImStatsDots } from "react-icons/im";
 import { TbHomeStats } from "react-icons/tb";
 import { FiMapPin } from "react-icons/fi";
+import { MdOutlineReportProblem } from "react-icons/md";
+
 
 
 const categories =[{
@@ -44,6 +46,11 @@ const Elements = [{
     to: '/dashboard/employees',
     icon: <GrUserWorker size={20} />
 }, {
+    name: 'البلاغات',
+    category: 'البيانات',
+    to: '/dashboard/reports',
+    icon: <MdOutlineReportProblem size={20} />
+}, {
     name: 'انشاء احصائيات',
     category: 'البيانات',
     to: '/dashboard/generate-stats',
@@ -63,7 +70,6 @@ const Elements = [{
     category: 'العرض',
     to: '/dashboard/map',
     icon: <FiMapPin />
-
 }]
 
 export { categories , Elements };

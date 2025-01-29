@@ -1,10 +1,14 @@
 import './App.css';
-import AddAdmin from './Dashboard/AddAdmin';
-import AddEmployee from './Dashboard/AddEmployee';
+import AddEmployee from './Dashboard/Add/AddEmployee';
 import Dashboard from './Dashboard/Dashboard';
-import Map from './Dashboard/Map';
+import AddAdmin from './Dashboard/Add/AddAdmin';
+import Map from './Dashboard/Map/Map';
+import CityAdmins from './Dashboard/Users/CityAdmins';
 import Login from './Website/Login';
 import { Routes , Route } from 'react-router-dom';
+import GovAdmins from './Dashboard/Users/GovAdmins';
+import Employees from './Dashboard/Users/Employees';
+import Reports from './Dashboard/Reports/Reports';
 function App() {
   return (
     <Routes>
@@ -13,9 +17,10 @@ function App() {
         <Route path="add-admin" element={<AddAdmin />} />
         <Route path="add-employee" element={<AddEmployee />} />
         <Route path="map" element={<Map />} />
-        <Route path="city-admins" element={<h1>City Admins</h1>} />
-        <Route path="governorate-admins" element={<h1>Governorate Admins</h1>} />
-        <Route path="employees" element={<h1>Employees</h1>} />
+        <Route path="city-admins" element={<CityAdmins />} />
+        <Route path="governorate-admins" element={<GovAdmins />} />
+        <Route path="employees" element={<Employees />} />
+        <Route path="reports" element={<Reports />}/>
         <Route path="generate-stats" element={<h1>Generate Stats</h1>} />
         <Route path="city-data" element={<h1>City Data</h1>} />
         <Route path="governorate-data" element={<h1>Governorate Data</h1>} />
