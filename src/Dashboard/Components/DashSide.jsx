@@ -14,7 +14,7 @@ export default function DashSide() {
 
     return (
         <div
-        className={`fixed md:sticky bg-white duration-500 top-0 md:top-[74px] z-50 shadow-md w-[270px] h-[100vh] md:h-[calc(100vh-74px)] pt-5 border-l-[1px] border-[#e5e5e5] 
+        className={`fixed md:sticky bg-white duration-300 top-0 md:top-[74px] z-50 shadow-md w-[270px] h-[100vh] md:h-[calc(100vh-74px)] pt-5 border-l-[1px] border-[#e5e5e5] 
             ${menu.isOpen ? 'right-[0px]' : 'right-[-270px]'} overflow-y-auto`}>
             <div className='ml-5 mb-5 flex justify-end md:hidden'><RxCross1 onClick={() => menu.setIsOpen((prev) => !prev)} className='cursor-pointer' color='#dc3545' size={25} /></div>
             <div className='flex md:hidden justify-center mb-10'><img src={logo} alt='logo' width='200px' /></div>

@@ -19,12 +19,12 @@ export default function AddEmployee() {
                 <h2 className="text-2xl py-5 border-b border-[#f3f2f9]">البيانات</h2>
                 <form className="py-5">
                     <div className="flex flex-col lg:flex-row lg:gap-5">
-                        <Input label="الأسم الأول" value={firstName} onchange={(e) => setFirstName(e)} placeholder='ادخل الأسم' />
-                        <Input label="الأسم الأخير" value={lastName} onchange={(e) => setLastName(e)} placeholder='ادخل الأسم' />
+                        <Input label="الأسم الأول:" value={firstName} onchange={(e) => setFirstName(e)} placeholder='ادخل الأسم' />
+                        <Input label="الأسم الأخير:" value={lastName} onchange={(e) => setLastName(e)} placeholder='ادخل الأسم' />
                     </div>
                     <div className="flex flex-col mb-1 lg:items-end lg:flex-row lg:gap-5">
-                        <Input label="الرقم القومي" value={email} onchange={(e) => setEmail(e)} placeholder='ادخل الرقم' />
-                        <Input label="رقم الهاتف" value={phone} onchange={(e) => setPhone(e)} placeholder='ادخل الرقم' />
+                        <Input label="الرقم القومي:" value={email} onchange={(e) => setEmail(e)} placeholder='ادخل الرقم' />
+                        <Input label="رقم الهاتف:" value={phone} onchange={(e) => setPhone(e)} placeholder='ادخل الرقم' />
                         <div className="relative flex-1 mb-1">
                             <select onChange={(e) => setDepartment(e.target.value)} value={department}
                                 className="w-full border text-right duration-300  text-sm border-[#e2e6f1] special_shadow rounded-md outline-none p-2 my-2  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none cursor-pointer">
@@ -40,10 +40,10 @@ export default function AddEmployee() {
                         </div>
                     </div>
                     <div className="flex flex-col lg:flex-row lg:gap-5">
-                        <Input label="البريد الألكتروني" value={email} onchange={(e) => setEmail(e)} placeholder='example@gmail.com' />
-                        <Input label="كلمة السر" value={password} onchange={(e) => setPassword(e)} placeholder='************' />
+                        <Input label="البريد الألكتروني:" value={email} onchange={(e) => setEmail(e)} placeholder='example@gmail.com' />
+                        <Input label="كلمة السر:" value={password} onchange={(e) => setPassword(e)} placeholder='************' />
                     </div>
-                    <div className="flex flex-col lg:flex-row-reverse lg:gap-5">
+                    <div className="flex flex-col lg:flex-row lg:gap-5">
                         <div className="relative flex-1">
                             <select onChange={(e) => setGov(e.target.value)} value={gov}
                                 className="w-full border text-right duration-300  text-sm border-[#e2e6f1] special_shadow rounded-md outline-none p-2 my-2  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none cursor-pointer">

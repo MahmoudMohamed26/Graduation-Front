@@ -9,15 +9,15 @@ export default function Table(props){
     </th>
     ))
     const dataShow = props.data.map((item , index) => (
-        <tr className="hover:bg-gray-200 bg-[#F4F7FA]" key={index}>
+        <tr className="hover:bg-gray-300 bg-[#F4F7FA] duration-300 odd:bg-gray-200" key={index}>
         <td className="p-4 text-[15px] text-gray-800 ">{index + 1}</td>
         {props.headers.map((item2, index2) => (
             <td key={index2} className="p-4 text-sm text-gray-800">
-            {item2.key === 'status' ? (item[item2.key] === 'Completed' ? <span className="px-2 py-1 bg-green-200 text-green-800 rounded-md">مكتمل</span> : item[item2.key] === 'On Hold' ? <span className="px-2 py-1 bg-yellow-200 text-yellow-800 rounded-md">قيد التنفيذ</span> : <span className="px-2 py-1 bg-red-200 text-red-800 rounded-md">معلق</span>) : WordCut(item[item2.key], 30)}
+            {item2.key === 'status' ? (item[item2.key] === 'Completed' ? <span className="px-2 py-1 bg-green-200 text-green-800 rounded-md">مكتمل</span> : item[item2.key] === 'On Hold' ? <span className="px-2 py-1 bg-red-200 text-red-800 rounded-md">معلق</span> : <span className="px-2 py-1 bg-yellow-200 text-yellow-800 rounded-md">قيد التنفيذ</span>) : WordCut(item[item2.key], 30)}
             </td>
         ))}
         
-            {url === 'reports' ? (<td className="py-4 flex justify-center"><Link to={`${item.id}`}><FaRegEye className="cursor-pointer !hover:text-[#604CC7]" color="#725DFE" size={25} /></Link></td>) : (<td><Link>
+            {url === 'reports' ? (<td className="py-4 flex justify-center"><Link to={`${item.id}`}><FaRegEye className="cursor-pointer !hover:text-[#604CC7]" color="#725DFE" size={20} /></Link></td>) : (<td><Link>
             <button className="mr-4" title="Edit">
                 <svg
                 xmlns="http://www.w3.org/2000/svg"

@@ -182,7 +182,6 @@ export default function Reports(){
         if(status === 'all') return true;
         return item.status.toLowerCase() === status.toLowerCase();
     })
-
     return(
         <div>
             <div className="flex justify-between items-center">

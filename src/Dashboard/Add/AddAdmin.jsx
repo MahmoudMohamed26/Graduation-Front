@@ -17,15 +17,15 @@ export default function AddAdmin() {
             <div className="bg-white mt-10 px-2 text-right rounded-sm">
                 <h2 className="text-2xl py-5 border-b border-[#f3f2f9]">البيانات</h2>
                 <form className="py-5">
-                    <div className="flex flex-col lg:flex-row-reverse lg:gap-5">
-                        <Input label="الأسم الأول" value={firstName} onchange={(e) => setFirstName(e)} placeholder='ادخل الأسم' />
-                        <Input label="الأسم الأخير" value={lastName} onchange={(e) => setLastName(e)} placeholder='ادخل الأسم' />
+                    <div className="flex flex-col lg:flex-row lg:gap-5">
+                        <Input label="الأسم الأول:" value={firstName} onchange={(e) => setFirstName(e)} placeholder='ادخل الأسم' />
+                        <Input label="الأسم الأخير:" value={lastName} onchange={(e) => setLastName(e)} placeholder='ادخل الأسم' />
                     </div>
-                    <div className="flex flex-col lg:flex-row-reverse lg:gap-5">
-                        <Input label="البريد الألكتروني" value={email} onchange={(e) => setEmail(e)} placeholder='example@gmail.com' />
-                        <Input label="كلمة السر" value={password} onchange={(e) => setPassword(e)} placeholder='************' />
+                    <div className="flex flex-col lg:flex-row lg:gap-5">
+                        <Input label="البريد الألكتروني:" value={email} onchange={(e) => setEmail(e)} placeholder='example@gmail.com' />
+                        <Input label="كلمة السر:" value={password} onchange={(e) => setPassword(e)} placeholder='************' />
                     </div>
-                    <div className="flex flex-col lg:flex-row-reverse lg:gap-5">
+                    <div className="flex flex-col lg:flex-row lg:gap-5">
                         <div className="relative flex-1">
                             <select onChange={(e) => setAdminType(e.target.value)} value={adminType}
                                 className="w-full border text-right duration-300  text-sm border-[#e2e6f1] special_shadow rounded-md outline-none p-2 my-2  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none cursor-pointer">

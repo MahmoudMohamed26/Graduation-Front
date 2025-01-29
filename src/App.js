@@ -9,6 +9,7 @@ import { Routes , Route } from 'react-router-dom';
 import GovAdmins from './Dashboard/Users/GovAdmins';
 import Employees from './Dashboard/Users/Employees';
 import Reports from './Dashboard/Reports/Reports';
+import SingleReport from './Dashboard/Reports/SingleReport';
 function App() {
   return (
     <Routes>
@@ -21,6 +22,7 @@ function App() {
         <Route path="governorate-admins" element={<GovAdmins />} />
         <Route path="employees" element={<Employees />} />
         <Route path="reports" element={<Reports />}/>
+        <Route path="reports/:id" element={<SingleReport />}/>
         <Route path="generate-stats" element={<h1>Generate Stats</h1>} />
         <Route path="city-data" element={<h1>City Data</h1>} />
         <Route path="governorate-data" element={<h1>Governorate Data</h1>} />
