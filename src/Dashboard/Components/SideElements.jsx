@@ -5,6 +5,7 @@ import { IoPersonAddOutline } from "react-icons/io5";
 import { RiAdminLine } from "react-icons/ri";
 import { ImStatsDots } from "react-icons/im";
 import { TbHomeStats } from "react-icons/tb";
+import { FiMapPin } from "react-icons/fi";
 
 
 const categories =[{
@@ -13,15 +14,17 @@ const categories =[{
     name: 'الأضافه',
 }, {
     name: 'البيانات'
+}, {
+    name: 'العرض'
 }]
 
 const Elements = [{
-    name: 'أضافة مشرف',
+    name: 'اضافة مشرف',
     category: 'الأضافه',
     to: '/dashboard/add-admin',
     icon: <RiAdminLine size={20} />
 } , {
-    name: 'أضافة موظف',
+    name: 'اضافة موظف',
     category: 'الأضافه',
     to: '/dashboard/add-employee',
     icon: <IoPersonAddOutline size={20} />
@@ -55,6 +58,12 @@ const Elements = [{
     category: 'البيانات',
     to: '/dashboard/governorate-data',
     icon: <TbHomeStats size={20} />
+}, {
+    name: 'الخريطة',
+    category: 'العرض',
+    to: '/dashboard/map',
+    icon: <FiMapPin />
+
 }]
 
 export { categories , Elements };

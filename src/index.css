@@ -8,6 +8,10 @@
     margin-right: auto;
 }
 
+.leaflet-control-attribution {
+    display: none !important;
+}
+
 :focus.special_shadow {
     box-shadow: #ccc4ff 0px 0px 2px 1px;
 

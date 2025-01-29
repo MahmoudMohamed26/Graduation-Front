@@ -2,6 +2,7 @@ import './App.css';
 import AddAdmin from './Dashboard/AddAdmin';
 import AddEmployee from './Dashboard/AddEmployee';
 import Dashboard from './Dashboard/Dashboard';
+import Map from './Dashboard/Map';
 import Login from './Website/Login';
 import { Routes , Route } from 'react-router-dom';
 function App() {
@@ -11,6 +12,7 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />}>
         <Route path="add-admin" element={<AddAdmin />} />
         <Route path="add-employee" element={<AddEmployee />} />
+        <Route path="map" element={<Map />} />
         <Route path="city-admins" element={<h1>City Admins</h1>} />
         <Route path="governorate-admins" element={<h1>Governorate Admins</h1>} />
         <Route path="employees" element={<h1>Employees</h1>} />
