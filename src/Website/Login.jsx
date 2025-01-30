@@ -52,15 +52,15 @@ export default function SignIn() {
   });
 
   return (
-    <div className={`bg-cover bg-center`} style={{backgroundImage: `url(${bg_image})`}}>
+    <div className={`bg-cover h-[100vh] bg-center`} style={{backgroundImage: `url(${bg_image})`}}>
         <div className="absolute top-0 left-0 w-full h-full bg-[#725DFE] opacity-70"></div>d
         <div
-            className="flex relative flex-col container items-center overflow-y-auto justify-center w-screen h-screen"
+            className="flex relative mt-[-80px] flex-col container items-center overflow-y-auto justify-center w-screen h-screen"
             >
             <div className="mb-5 h-[67px] min-w-1">
                 <img src={white_logo} alt="logo" width={130} />
             </div>
-            <div className="w-full py-[100px] flex items-center max-w-md bg-white p-8 rounded-lg shadow-lg text-right">
+            <div className="w-full py-[60px] flex items-center max-w-md bg-white p-8 rounded-lg shadow-lg text-right">
                 <div className="flex-1">
                 <h2 className="text-2xl font-bold mb-6 text-center">
                 تسجيل الدخول
