@@ -12,6 +12,23 @@
     display: none !important;
 }
 
+@keyframes fadeSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-170%) translateX(-50%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-145%) translateX(-50%);
+    }
+}
+
+.modaldown-animation {
+    animation: fadeSlideDown .3s ease-out;
+}
+
+
+
 :focus.special_shadow {
     box-shadow: #ccc4ff 0px 0px 2px 1px;
 

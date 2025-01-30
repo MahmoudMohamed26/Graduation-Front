@@ -24,6 +24,7 @@ export default function Employees(){
     }]
     const data = [
         {
+            id: 1,
             name: 'أحمد علي',
             natinalId: '12345678901234',
             email: 'ahmed.ali@gmail.com',
@@ -33,6 +34,7 @@ export default function Employees(){
             phone: '01012345678',
         },
         {
+            id: 2,
             name: 'سارة محمود',
             natinalId: '23456789012345',
             email: 'sara.mahmoud@gmail.com',
@@ -42,6 +44,7 @@ export default function Employees(){
             phone: '01023456789',
         },
         {
+            id: 3,
             name: 'خالد حسن',
             natinalId: '34567890123456',
             email: 'khaled.hassan@gmail.com',
@@ -51,6 +54,7 @@ export default function Employees(){
             phone: '01034567890',
         },
         {
+            id: 4,
             name: 'نور محمد',
             natinalId: '45678901234567',
             email: 'nour.mohamed@gmail.com',
@@ -60,6 +64,7 @@ export default function Employees(){
             phone: '01045678901',
         },
         {
+            id: 5,
             name: 'محمود عبد الله',
             natinalId: '56789012345678',
             email: 'mahmoud.abdullah@gmail.com',
@@ -69,6 +74,7 @@ export default function Employees(){
             phone: '01056789012',
         },
         {
+            id: 6,
             name: 'منى حسن',
             natinalId: '67890123456789',
             email: 'mona.hassan@gmail.com',
@@ -78,6 +84,7 @@ export default function Employees(){
             phone: '01067890123',
         },
         {
+            id: 7,
             name: 'ياسر إبراهيم',
             natinalId: '78901234567890',
             email: 'yasser.ibrahim@gmail.com',
@@ -87,6 +94,7 @@ export default function Employees(){
             phone: '01078901234',
         },
         {
+            id: 8,
             name: 'فاطمة يوسف',
             natinalId: '89012345678901',
             email: 'fatma.youssef@gmail.com',
@@ -96,6 +104,7 @@ export default function Employees(){
             phone: '01089012345',
         },
         {
+            id: 9,
             name: 'حسام صالح',
             natinalId: '90123456789012',
             email: 'hossam.salem@gmail.com',
@@ -105,6 +114,7 @@ export default function Employees(){
             phone: '01090123456',
         },
         {
+            id: 10,
             name: 'سلمى عادل',
             natinalId: '01234567890123',
             email: 'salma.adel@gmail.com',
@@ -114,6 +124,7 @@ export default function Employees(){
             phone: '01001234567',
         },
         {
+            id: 11,
             name: 'فهد سامي',
             natinalId: '12345098765432',
             email: 'fahd.sami@gmail.com',
@@ -123,6 +134,7 @@ export default function Employees(){
             phone: '01012345098',
         },
         {
+            id: 12,
             name: 'علي إبراهيم',
             natinalId: '23456198765432',
             email: 'ali.ibrahim@gmail.com',
@@ -132,6 +144,7 @@ export default function Employees(){
             phone: '01023456198',
         },
         {
+            id: 13,
             name: 'مريم مصطفى',
             natinalId: '34567234567890',
             email: 'mariam.mostafa@gmail.com',
@@ -141,6 +154,7 @@ export default function Employees(){
             phone: '01034567234',
         },
         {
+            id: 14,
             name: 'طارق مصطفى',
             natinalId: '45678345678901',
             email: 'tareq.mostafa@gmail.com',
@@ -150,6 +164,7 @@ export default function Employees(){
             phone: '01045678345',
         },
         {
+            id: 15,
             name: 'عبد الله محمد',
             natinalId: '56789456789012',
             email: 'abdallah.mohamed@gmail.com',
@@ -159,6 +174,7 @@ export default function Employees(){
             phone: '01056789456',
         },
         {
+            id: 16,
             name: 'عادل حسين',
             natinalId: '67890567890123',
             email: 'adel.hossain@gmail.com',
@@ -168,6 +184,7 @@ export default function Employees(){
             phone: '01067890567',
         },
         {
+            id: 17,
             name: 'أميرة سامي',
             natinalId: '78901678901234',
             email: 'amira.samy@gmail.com',
@@ -177,6 +194,7 @@ export default function Employees(){
             phone: '01078901678',
         },
         {
+            id: 18,
             name: 'سليم حسام',
             natinalId: '89012789012345',
             email: 'salim.hossam@gmail.com',
@@ -186,6 +204,7 @@ export default function Employees(){
             phone: '01089012789',
         },
         {
+            id: 19,
             name: 'نورا إبراهيم',
             natinalId: '90123890123456',
             email: 'nora.ibrahim@gmail.com',
@@ -195,6 +214,7 @@ export default function Employees(){
             phone: '01090123890',
         },
         {
+            id: 20,
             name: 'محمود سعيد',
             natinalId: '01234901234567',
             email: 'mahmoud.said@gmail.com',

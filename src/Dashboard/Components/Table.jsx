@@ -1,15 +1,28 @@
 import { Link } from "react-router-dom"
 import { FaRegEye } from "react-icons/fa";
 import WordCut from "../../helpers/WordCut";
+import { CiWarning } from "react-icons/ci";
+import { RxCross1 } from "react-icons/rx";
+import { useState } from "react";
 export default function Table(props){
     const url = window.location.pathname.split("/")[window.location.pathname.split("/").length-1]
+    const [showpop, setShowpop] = useState(false)
+    const [removeId, setRemoveId] = useState(null)
+    function HandleDeleteConfirmation(id){
+        setShowpop(true)
+        setRemoveId(id)
+    }
+    function HandleRemove(){
+        console.log("Removed : " + removeId)
+        setShowpop(false)
+    }
     const headersShow = props.headers.map((element , index) => (
         <th key={index} className="p-4 font-semibold text-right">
       {element.name}
     </th>
     ))
     const dataShow = props.data.map((item , index) => (
-        <tr className="hover:bg-gray-300 bg-[#F4F7FA] duration-300 odd:bg-gray-200" key={index}>
+        <tr className="hover:bg-gray-200 bg-[#F4F7FA] duration-300 odd:bg-gray-200" key={index}>
         <td className="p-4 text-[15px] text-gray-800 ">{index + 1}</td>
         {props.headers.map((item2, index2) => (
             <td key={index2} className="p-4 text-sm text-gray-800">
@@ -17,7 +30,7 @@ export default function Table(props){
             </td>
         ))}
         
-            {url === 'reports' ? (<td className="py-4 flex justify-center"><Link to={`${item.id}`}><FaRegEye className="cursor-pointer !hover:text-[#604CC7]" color="#725DFE" size={20} /></Link></td>) : (<td><Link>
+            {url === 'reports' ? (<td className="py-4 flex justify-center"><Link to={`${item.id}`}><FaRegEye className="cursor-pointer !hover:text-[#604CC7]" color="#725DFE" size={20} /></Link></td>) : (<td><Link to={`${item.id}`}>
             <button className="mr-4" title="Edit">
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -36,6 +49,7 @@ export default function Table(props){
             </button>
             </Link>
             <button
+                onClick={() => HandleDeleteConfirmation(item.id)}
                 className="mr-4"
                 title="Delete"
             >
@@ -57,19 +71,36 @@ export default function Table(props){
         </tr>
     ))
     return(
-        <div className="overflow-x-auto">
-            <table className="min-w-full bg-white">
-                <thead className="bg-[#725DFE] text-sm text-white whitespace-nowrap">
-                    <tr>
-                    <th className="p-4 font-semibold text-right">#</th>
-                        {headersShow}
-                        <th className="p-4 font-semibold text-right">العمليات</th>
-                    </tr>
-                </thead>
-                <tbody className="whitespace-nowrap">
-                    {dataShow}
-                </tbody>
-            </table>
+        <div>
+            {showpop && (<>
+                <div onClick={(prev) => setShowpop(!prev)} className="fixed top-0 left-0 w-full h-full duration-300 bg-black opacity-30 z-50"></div>
+                <div className={`bg-white fixed z-[51] translate-y-[-145%] opacity-1 top-1/2 w-[24rem] md:w-[28rem] rounded-md shadow-lg left-1/2 translate-x-1/2  duration-[3s] modaldown-animation`}>
+                    <div className='ml-5 mt-5 flex justify-end'><RxCross1 onClick={(prev) => setShowpop(!prev)} className='cursor-pointer' color='#dc3545' size={15} /></div>
+                    <div className="pb-10 px-4">
+                        <h1 className="flex gap-3 text-3xl items-center"><CiWarning color="red" size={50} /> تحذير</h1>
+                        <p className="mt-5">هل أنت متأكد من أنك ترغب في حذف هذا العنصر ؟</p>
+                        <p className="mt-5">يرجى العلم أن هذه العملية نهائية ولا يمكن التراجع عنها .</p>
+                        <div className="mt-10 flex gap-2">
+                            <button onClick={HandleRemove} className="py-1 px-8 text-white font-semibold rounded-sm bg-red-600 duration-300 hover:bg-red-700">حذف</button>
+                            <button onClick={(prev) => setShowpop(!prev)} className="py-1 flex-1 border duration-300 hover:border-[#333] text-sm px-4 font-semibold rounded-sm">تراجع</button>
+                        </div>
+                    </div>
+                </div>
+            </>)}
+            <div className="overflow-x-auto">
+                <table className="min-w-full bg-white">
+                    <thead className="bg-[#725DFE] text-sm text-white whitespace-nowrap">
+                        <tr>
+                        <th className="p-4 font-semibold text-right">#</th>
+                            {headersShow}
+                            <th className="p-4 font-semibold text-right">العمليات</th>
+                        </tr>
+                    </thead>
+                    <tbody className="whitespace-nowrap">
+                        {dataShow}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

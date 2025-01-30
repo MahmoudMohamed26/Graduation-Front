@@ -7,6 +7,9 @@ import { ImStatsDots } from "react-icons/im";
 import { TbHomeStats } from "react-icons/tb";
 import { FiMapPin } from "react-icons/fi";
 import { MdOutlineReportProblem } from "react-icons/md";
+import { IoSettingsOutline } from "react-icons/io5";
+
+
 
 
 
@@ -18,6 +21,8 @@ const categories =[{
     name: 'البيانات'
 }, {
     name: 'العرض'
+}, {
+    name: 'الاعدادات'
 }]
 
 const Elements = [{
@@ -69,7 +74,12 @@ const Elements = [{
     name: 'الخريطة',
     category: 'العرض',
     to: '/dashboard/map',
-    icon: <FiMapPin />
+    icon: <FiMapPin size={20} />
+}, {
+    name: 'الملف الشخصي',
+    category: 'الاعدادات',
+    to: '/dashboard/settings',
+    icon: <IoSettingsOutline size={20} />
 }]
 
 export { categories , Elements };

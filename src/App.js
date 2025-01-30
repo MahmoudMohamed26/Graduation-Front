@@ -1,7 +1,7 @@
 import './App.css';
-import AddEmployee from './Dashboard/Add/AddEmployee';
+import AddEmployee from './Dashboard/AddEdit/AddEmployee';
 import Dashboard from './Dashboard/Dashboard';
-import AddAdmin from './Dashboard/Add/AddAdmin';
+import AddAdmin from './Dashboard/AddEdit/AddAdmin';
 import Map from './Dashboard/Map/Map';
 import CityAdmins from './Dashboard/Users/CityAdmins';
 import Login from './Website/Login';
@@ -10,6 +10,9 @@ import GovAdmins from './Dashboard/Users/GovAdmins';
 import Employees from './Dashboard/Users/Employees';
 import Reports from './Dashboard/Reports/Reports';
 import SingleReport from './Dashboard/Reports/SingleReport';
+import EditCityAdmin from './Dashboard/AddEdit/EditCityAdmin';
+import EditEmployee from './Dashboard/AddEdit/EditEmployee';
+import EditGovAdmin from './Dashboard/AddEdit/EditGovAdmin';
 function App() {
   return (
     <Routes>
@@ -18,9 +21,13 @@ function App() {
         <Route path="add-admin" element={<AddAdmin />} />
         <Route path="add-employee" element={<AddEmployee />} />
         <Route path="map" element={<Map />} />
+        <Route path="settings" element={<h1>Profile</h1>} />
         <Route path="city-admins" element={<CityAdmins />} />
+        <Route path="city-admins/:id" element={<EditCityAdmin />} />
         <Route path="governorate-admins" element={<GovAdmins />} />
+        <Route path="governorate-admins/:id" element={<EditGovAdmin />} />
         <Route path="employees" element={<Employees />} />
+        <Route path="employees/:id" element={<EditEmployee />} />
         <Route path="reports" element={<Reports />}/>
         <Route path="reports/:id" element={<SingleReport />}/>
         <Route path="generate-stats" element={<h1>Generate Stats</h1>} />
