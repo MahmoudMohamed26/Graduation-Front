@@ -8,8 +8,18 @@
     margin-right: auto;
 }
 
+.special-scroll1{
+    scrollbar-width: thin;
+    direction: ltr;
+    scrollbar-color: #DDD white;
+}
+
 .leaflet-control-attribution {
     display: none !important;
+}
+
+.rtl{
+    direction: rtl;
 }
 
 @keyframes fadeSlideDown {

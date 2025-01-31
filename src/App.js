@@ -13,6 +13,7 @@ import SingleReport from './Dashboard/Reports/SingleReport';
 import EditCityAdmin from './Dashboard/AddEdit/EditCityAdmin';
 import EditEmployee from './Dashboard/AddEdit/EditEmployee';
 import EditGovAdmin from './Dashboard/AddEdit/EditGovAdmin';
+import CityAnalysis from './Dashboard/Analysis/CityAnalysis';
 function App() {
   return (
     <Routes>
@@ -31,7 +32,7 @@ function App() {
         <Route path="reports" element={<Reports />}/>
         <Route path="reports/:id" element={<SingleReport />}/>
         <Route path="generate-stats" element={<h1>Generate Stats</h1>} />
-        <Route path="city-data" element={<h1>City Data</h1>} />
+        <Route path="city-data" element={<CityAnalysis />} />
         <Route path="governorate-data" element={<h1>Governorate Data</h1>} />
       </Route>
     </Routes>
