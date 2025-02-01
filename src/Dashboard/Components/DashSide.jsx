@@ -20,27 +20,47 @@ export default function DashSide() {
             <div className='flex md:hidden justify-center mb-10'><img src={logo} alt='logo' width='200px' /></div>
             <ul className='px-5 items-end rtl'>
                 {groupedElements.map((category, index) => (
-                    <div key={index}>
+                    <div className='py-2' key={index}>
                         <p className="text-xs text-right px-2 mb-3 text-[#61748f]">{category.name}</p>
                         
                         {category.items.map((element, idx) => (
+                            element.name === "الصفحة الرئيسية" ?
                             <NavLink
-                                onClick={() => {
-                                    if (window.innerWidth < 768) {
-                                        menu.setIsOpen((prev) => !prev);
-                                    }
-                                }}
-                                key={idx}
-                                to={element.to}
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? 'text-white bg-[#725DFE] py-2 px-2 rounded-[0.2rem] mb-3 duration-300 flex gap-3 items-center'
-                                        : 'text-[#61748f] py-2 px-2 rounded-[0.2rem] mb-3 duration-300 hover:text-white hover:bg-[#725DFE] flex gap-3 items-center'
+                            onClick={() => {
+                                if (window.innerWidth < 768) {
+                                    menu.setIsOpen((prev) => !prev);
                                 }
-                            >   
-                                <li>{element.icon}</li>
-                                {element.name}
-                            </NavLink>
+                            }}
+                            key={idx}
+                            to={element.to}
+                            end
+                            className={({ isActive }) =>
+                                isActive
+                                    ? 'text-white bg-[#725DFE] py-2 px-2 rounded-[0.2rem] mb-3 duration-300 flex gap-3 items-center'
+                                    : 'text-[#61748f] py-2 px-2 rounded-[0.2rem] mb-3 duration-300 hover:text-white hover:bg-[#725DFE] flex gap-3 items-center'
+                            }>
+                            
+                            <li>{element.icon}</li>
+                            {element.name}
+                        </NavLink>
+                        : <NavLink
+                        onClick={() => {
+                            if (window.innerWidth < 768) {
+                                menu.setIsOpen((prev) => !prev);
+                            }
+                        }}
+                        key={idx}
+                        to={element.to}
+                        
+                        className={({ isActive }) =>
+                            isActive
+                                ? 'text-white bg-[#725DFE] py-2 px-2 rounded-[0.2rem] mb-3 duration-300 flex gap-3 items-center'
+                                : 'text-[#61748f] py-2 px-2 rounded-[0.2rem] mb-3 duration-300 hover:text-white hover:bg-[#725DFE] flex gap-3 items-center'
+                        }>
+                        
+                        <li>{element.icon}</li>
+                        {element.name}
+                    </NavLink>
                         ))}
                     </div>
                 ))}

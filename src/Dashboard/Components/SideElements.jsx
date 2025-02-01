@@ -14,6 +14,8 @@ import { IoSettingsOutline } from "react-icons/io5";
 
 
 const categories =[{
+    name: 'الرئيسية'
+}, {
     name: 'المستخدمين',
 } ,{
     name: 'الأضافه',
@@ -21,8 +23,6 @@ const categories =[{
     name: 'البيانات'
 }, {
     name: 'العرض'
-}, {
-    name: 'الاعدادات'
 }]
 
 const Elements = [{
@@ -76,8 +76,13 @@ const Elements = [{
     to: '/dashboard/map',
     icon: <FiMapPin size={20} />
 }, {
+    name: 'الصفحة الرئيسية',
+    category: 'الرئيسية',
+    to: '/dashboard',
+    icon: <IoSettingsOutline size={20} />
+}, {
     name: 'الملف الشخصي',
-    category: 'الاعدادات',
+    category: 'الرئيسية',
     to: '/dashboard/settings',
     icon: <IoSettingsOutline size={20} />
 }]

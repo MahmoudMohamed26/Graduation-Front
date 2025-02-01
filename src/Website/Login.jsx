@@ -14,7 +14,6 @@ export default function SignIn() {
   const [successMessage, setSuccessMessage] = useState("");
   // eslint-disable-next-line
   const [loading, setLoading] = useState(false);
-  // eslint-disable-next-line
   const navigate = useNavigate();
   const [showpass , setShowPass] = useState(false);
 
@@ -48,6 +47,7 @@ export default function SignIn() {
     validationSchema,
     onSubmit: (values) => {
       console.log("Form Submitted", values);
+      navigate("/dashboard");
     },
   });
 
