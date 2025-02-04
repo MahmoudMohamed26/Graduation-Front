@@ -3,14 +3,11 @@ import { PiCity } from "react-icons/pi";
 import { RiGovernmentLine } from "react-icons/ri";
 import { IoPersonAddOutline } from "react-icons/io5";
 import { RiAdminLine } from "react-icons/ri";
-import { ImStatsDots } from "react-icons/im";
 import { TbHomeStats } from "react-icons/tb";
 import { FiMapPin } from "react-icons/fi";
 import { MdOutlineReportProblem } from "react-icons/md";
 import { IoSettingsOutline } from "react-icons/io5";
-
-
-
+import { IoHomeOutline } from "react-icons/io5";
 
 
 const categories =[{
@@ -51,15 +48,10 @@ const Elements = [{
     to: '/dashboard/employees',
     icon: <GrUserWorker size={20} />
 }, {
-    name: 'البلاغات',
+    name: 'الشكاوي',
     category: 'البيانات',
     to: '/dashboard/reports',
     icon: <MdOutlineReportProblem size={20} />
-}, {
-    name: 'انشاء احصائيات',
-    category: 'البيانات',
-    to: '/dashboard/generate-stats',
-    icon: <ImStatsDots size={20} />
 }, {
     name: 'احصائيات المدينه',
     category: 'البيانات',
@@ -79,7 +71,7 @@ const Elements = [{
     name: 'الصفحة الرئيسية',
     category: 'الرئيسية',
     to: '/dashboard',
-    icon: <IoSettingsOutline size={20} />
+    icon: <IoHomeOutline size={20} />
 }, {
     name: 'الملف الشخصي',
     category: 'الرئيسية',

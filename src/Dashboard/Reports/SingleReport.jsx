@@ -5,7 +5,7 @@ export default function SingleReport(){
     return(
         <div>
             <div className="flex">
-                <h1 className="w-fit text-4xl relative before:absolute before:h-[1px] before:w-[calc(100%)] before:bg-slate-300 before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0">تفاصيل البلاغ</h1>
+                <h1 className="w-fit text-4xl relative before:absolute before:h-[1px] before:w-[calc(100%)] before:bg-slate-300 before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0">تفاصيل الشكوى</h1>
             </div>
             <div className="bg-white mt-10 px-2 text-right rounded-sm">
                 <h2 className="text-2xl py-5 border-b border-[#f3f2f9]">البيانات</h2>
