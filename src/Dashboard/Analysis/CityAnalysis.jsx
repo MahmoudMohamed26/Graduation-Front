@@ -50,7 +50,7 @@ export default function CityAnalysis() {
                     <CurrentReports />
                 </div>
             </div>
-            <div className="lg:w-[250px] flex flex-col gap-3">
+            <div className="lg:w-[270px] flex flex-col gap-3">
                 <div>
                     <TopRated />
                 </div>

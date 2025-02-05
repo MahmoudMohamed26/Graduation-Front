@@ -7,19 +7,18 @@ import { TbHomeStats } from "react-icons/tb";
 import { FiMapPin } from "react-icons/fi";
 import { MdOutlineReportProblem } from "react-icons/md";
 import { IoSettingsOutline } from "react-icons/io5";
-import { IoHomeOutline } from "react-icons/io5";
 
 
 const categories =[{
     name: 'الرئيسية'
 }, {
-    name: 'المستخدمين',
-} ,{
     name: 'الأضافه',
-}, {
-    name: 'البيانات'
+} ,{
+    name: 'المستخدمين',
 }, {
     name: 'العرض'
+}, {
+    name: 'الاعدادات'
 }]
 
 const Elements = [{
@@ -48,33 +47,28 @@ const Elements = [{
     to: '/dashboard/employees',
     icon: <GrUserWorker size={20} />
 }, {
-    name: 'الشكاوي',
-    category: 'البيانات',
-    to: '/dashboard/reports',
-    icon: <MdOutlineReportProblem size={20} />
-}, {
     name: 'احصائيات المدينه',
-    category: 'البيانات',
+    category: 'الرئيسية',
     to: '/dashboard/city-data',
     icon: <TbHomeStats size={20} />
 }, {
     name: 'احصائيات المحافظه',
-    category: 'البيانات',
+    category: 'الرئيسية',
     to: '/dashboard/governorate-data',
     icon: <TbHomeStats size={20} />
 }, {
+    name: 'الشكاوي',
+    category: 'الرئيسية',
+    to: '/dashboard/reports',
+    icon: <MdOutlineReportProblem size={20} />
+},  {
     name: 'الخريطة',
     category: 'العرض',
     to: '/dashboard/map',
     icon: <FiMapPin size={20} />
 }, {
-    name: 'الصفحة الرئيسية',
-    category: 'الرئيسية',
-    to: '/dashboard',
-    icon: <IoHomeOutline size={20} />
-}, {
     name: 'الملف الشخصي',
-    category: 'الرئيسية',
+    category: 'الاعدادات',
     to: '/dashboard/settings',
     icon: <IoSettingsOutline size={20} />
 }]

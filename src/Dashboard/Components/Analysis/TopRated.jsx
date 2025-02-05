@@ -50,7 +50,7 @@ export default function TopRated(){
     ))
 
     return(
-        <div className="bg-white rounded-md px-2 py-2">
+        <div className="bg-white rounded-md px-4 py-4">
             <h1 className="w-fit text-sm relative before:absolute before:h-[1px] before:w-[calc(100%)] before:bg-slate-300 before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0">اعلى الموظفيين تقييماً</h1>
             <div className="mt-10">
                 <div>
