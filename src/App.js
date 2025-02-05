@@ -3,6 +3,7 @@ import AddEmployee from './Dashboard/AddEdit/AddEmployee';
 import Dashboard from './Dashboard/Dashboard';
 import AddAdmin from './Dashboard/AddEdit/AddAdmin';
 import Map from './Dashboard/Map/Map';
+// import { Navigate } from 'react-router-dom';
 import CityAdmins from './Dashboard/Users/CityAdmins';
 import Login from './Website/Login';
 import { Routes , Route } from 'react-router-dom';
@@ -30,6 +31,7 @@ function App() {
         <Route path="employees" element={<Employees />} />
         <Route path="employees/:id" element={<EditEmployee />} />
         <Route path="reports" element={<Reports />}/>
+        {/* <Route path="/dashboard" element={<Navigate to="/dashboard/reports" />} /> */}
         <Route path="reports/:id" element={<SingleReport />}/>
         <Route path="generate-stats" element={<h1>Generate Stats</h1>} />
         <Route path="city-data" element={<CityAnalysis />} />
