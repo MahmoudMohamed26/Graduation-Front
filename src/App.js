@@ -15,6 +15,7 @@ import EditCityAdmin from './Dashboard/AddEdit/EditCityAdmin';
 import EditEmployee from './Dashboard/AddEdit/EditEmployee';
 import EditGovAdmin from './Dashboard/AddEdit/EditGovAdmin';
 import CityAnalysis from './Dashboard/Analysis/CityAnalysis';
+import GovAnalysis from './Dashboard/Analysis/GovAnalysis';
 function App() {
   return (
     <Routes>
@@ -34,7 +35,7 @@ function App() {
         <Route path="/dashboard" element={<Navigate to="/dashboard/city-data" />} />
         <Route path="reports/:id" element={<SingleReport />}/>
         <Route path="city-data" element={<CityAnalysis />} />
-        <Route path="governorate-data" element={<h1>Governorate Data</h1>} />
+        <Route path="governorate-data" element={<GovAnalysis />} />
       </Route>
     </Routes>
   );
