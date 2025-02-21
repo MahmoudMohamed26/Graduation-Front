@@ -18,7 +18,7 @@ export default function Table(props){
     }
     const headersShow = props.headers.map((element , index) => (
         <th key={index} className="p-4 font-semibold text-right">
-      {element.name}
+    {element.name}
     </th>
     ))
     const dataShow = props.data.map((item , index) => (
@@ -26,11 +26,11 @@ export default function Table(props){
         <td className="p-4 text-[15px] text-gray-800 ">{index + 1}</td>
         {props.headers.map((item2, index2) => (
             <td key={index2} className="p-4 text-sm text-gray-800">
-            {item2.key === 'status' ? (item[item2.key] === 'Completed' ? <span className="px-2 py-1 bg-green-200 text-green-800 rounded-md">مكتمل</span> : item[item2.key] === 'On Hold' ? <span className="px-2 py-1 bg-red-200 text-red-800 rounded-md">معلق</span> : <span className="px-2 py-1 bg-yellow-200 text-yellow-800 rounded-md">قيد التنفيذ</span>) : WordCut(item[item2.key], 30)}
+            {item2.key === 'status' ? (item[item2.key] === 'Completed' ? <span className="px-2 py-1 bg-green-200 text-green-800 rounded-md">مكتمل</span> : item[item2.key] === 'On Hold' ? <span className="px-2 py-1 bg-red-200 text-red-800 rounded-md">معلق</span> : <span className="px-2 py-1 bg-yellow-200 text-yellow-800 rounded-md">قيد التنفيذ</span>) : WordCut(item[item2.key] , 30)}
             </td>
         ))}
         
-            {url === 'reports' ? (<td className="py-4 flex justify-center"><Link to={`${item.id}`}><FaRegEye className="cursor-pointer !hover:text-[#604CC7]" color="#725DFE" size={20} /></Link></td>) : (<td><Link to={`${item.id}`}>
+            {url === 'reports' ? (<td className="py-4 flex justify-center"><Link to={`${item.id}`}><FaRegEye className="cursor-pointer !hover:text-[#604CC7]" color="#725DFE" size={20} /></Link></td>) : (<td><Link to={`${item.adminId}`}>
             <button className="mr-4" title="Edit">
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +49,7 @@ export default function Table(props){
             </button>
             </Link>
             <button
-                onClick={() => HandleDeleteConfirmation(item.id)}
+                onClick={() => HandleDeleteConfirmation(item.adminId)}
                 className="mr-4"
                 title="Delete"
             >
