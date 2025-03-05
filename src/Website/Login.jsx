@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
@@ -14,7 +14,6 @@ export default function SignIn() {
   const [successMessage, setSuccessMessage] = useState("");
   // eslint-disable-next-line
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [showpass , setShowPass] = useState(false);
 
   useEffect(() => {
@@ -47,7 +46,7 @@ export default function SignIn() {
     validationSchema,
     onSubmit: (values) => {
       console.log("Form Submitted", values);
-      navigate("/dashboard");
+      window.location.href = "/dashboard";
     },
   });
 

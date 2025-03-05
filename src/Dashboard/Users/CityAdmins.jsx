@@ -18,6 +18,8 @@ export default function CityAdmins(){
         }
         fetchData()
     } , [])
+
+
     const headers = [{
         name: 'الأسم',
         key: 'fullName',
