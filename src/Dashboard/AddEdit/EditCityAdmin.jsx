@@ -19,10 +19,11 @@ export default function AddAdmin() {
     const [btnLoad , setBtnLoad] = useState(false)
     const { id } = useParams();
     console.log(cities);
+    console.log(data);
     useEffect(() => {
         setLoad(true);
         const fetchData = async () => {
-            await axios.get(`${baseURL2}/${id}`)
+            await axios.get(`${baseURL2}/cityadmin/${id}`)
             .then((response) => {
                 setData(response.data);
             })
@@ -127,8 +128,8 @@ export default function AddAdmin() {
                             theme: "light",
                             transition: Bounce,
                             });
+                        resetForm();
                     })
-                    console.log(values);
                 }
                 catch(err){
                     console.log(err);
@@ -147,8 +148,6 @@ export default function AddAdmin() {
                 }
             }
             sendData()
-            console.log(values);
-            resetForm();
         },
     });
     return (

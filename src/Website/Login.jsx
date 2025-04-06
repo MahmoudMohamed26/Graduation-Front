@@ -6,6 +6,8 @@ import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import white_logo from "../images/logo-white.png"
 import bg_image from "../images/bg-image.jpg"
+import axios from "axios";
+import { baseURL2 } from "../API/Api";
 
 export default function SignIn() {
     // eslint-disable-next-line
@@ -27,7 +29,7 @@ export default function SignIn() {
   }, []);
 
   const validationSchema = Yup.object({
-    email: Yup.string()
+    username: Yup.string()
       .email("البريد الإلكتروني غير صالح")
       .required("البريد الإلكتروني مطلوب"),
     password: Yup.string()
@@ -40,13 +42,19 @@ export default function SignIn() {
 
   const login = useFormik({
     initialValues: {
-      email: "",
+      username: "",
       password: "",
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log("Form Submitted", values);
-      window.location.href = "/dashboard";
+        const sendData = async () => {
+            const res = await axios.post(`${baseURL2}/login` , values )
+            console.log(res);
+            window.localStorage.setItem("token" , res.data.jwttoken)
+        }
+        sendData()
+    //   window.location.href = "/dashboard";
+    // console.log(values);
     },
   });
 
@@ -65,27 +73,27 @@ export default function SignIn() {
                 تسجيل الدخول
                 </h2>
                 <form onSubmit={login.handleSubmit}>
-                <label htmlFor="email" className="block">
+                <label htmlFor="username" className="block">
                     البريد الإلكتروني :
                 </label>
                 <input
                     autoComplete="true"
                     placeholder="example@gmail.com"
-                    value={login.values.email}
+                    value={login.values.username}
                     onSubmit={login.handleBlur}
                     type="email"
                     onChange={login.handleChange}
-                    name="email"
-                    id="email"
+                    name="username"
+                    id="username"
                     className={`w-full border text-right duration-300 text-sm py-2 border-[#e2e6f1] special_shadow rounded-md outline-none p-2 my-2 ${
-                    login.errors.email && login.touched.email
+                    login.errors.username && login.touched.username
                         ? "border-red-500"
                         : "border-gray-300"
                     }`}
                 />
-                {login.errors.email && login.touched.email && (
+                {login.errors.username && login.touched.username && (
                     <div className="text-red-500 text-sm mb-4">
-                    {login.errors.email}
+                    {login.errors.username}
                     </div>
                 )}
 

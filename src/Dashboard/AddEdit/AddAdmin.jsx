@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { Bounce } from "react-toastify";
 import { baseURL2 } from "../../API/Api";
+import Skeleton from "react-loading-skeleton";
 export default function AddAdmin() {
 
     const [cities, setCities] = useState([]);
@@ -57,7 +58,7 @@ export default function AddAdmin() {
             hashPassword: Yup.string()
                     .matches(
                     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/,
-                    "كلمة المرور يجب أن تحتوي على حرف كبير وحرف صغير ورقم ورمز خاص"
+                    "كلمة المرور يجب أن تكون اكثر من 8 حروف و تحتوي على حرف كبير وحرف صغير ورقم ورمز خاص"
                     )
                     .required("هذا الحقل مطلوب"),
             type: Yup.string().required('هذا الحقل مطلوب'),
@@ -93,8 +94,8 @@ export default function AddAdmin() {
                             theme: "light",
                             transition: Bounce,
                             });
+                        resetForm();
                     })
-                    console.log(values);
                 }
                 catch(err){
                     console.log(err);
@@ -113,8 +114,6 @@ export default function AddAdmin() {
                 }
             }
             sendData()
-            console.log(values);
-            resetForm();
         },
     });
 
@@ -125,7 +124,7 @@ export default function AddAdmin() {
                     اضافة مشرف
                 </h1>
             </div>
-            <div className="bg-white mt-10 px-2 text-right rounded-sm">
+            {load ? <div className="mt-10"><Skeleton count={1} height={380} width="100%" /></div> : <div className="bg-white mt-10 px-2 text-right rounded-sm">
                 <h2 className="text-2xl py-5 border-b border-[#f3f2f9]">البيانات</h2>
                 
                 <form className="py-5" onSubmit={form.handleSubmit}>
@@ -221,7 +220,7 @@ export default function AddAdmin() {
                         </button>
                     </div>
                 </form>
-            </div>
+            </div>}
         </div>
     );
 }
