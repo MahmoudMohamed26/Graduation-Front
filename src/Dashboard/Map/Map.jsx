@@ -1,11 +1,29 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { Axios } from "../../API/Axios";
 
 export default function Map() {
+    const [reports, setReports] = useState([]);
+    console.log(reports);
     useEffect(() => {
+        const data = async () => {
+            try{
+                await Axios.get("/reports")
+                .then((res) => {
+                    setReports(res.data)
+
+                })
+            }catch(err){
+                console.error(err)
+            }
+        }
+        data()
+    } , [])
+    useEffect(() => {
+
         const map = L.map("map").setView([30.4662, 31.1845], 9);
 
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -22,19 +40,25 @@ export default function Map() {
         });
         
 
-        const markers = [
-            { lat: 30.4674, lng: 31.1848, place: "Benha" },
-            { lat: 30.4674, lng: 31.1848, place: "Benha" },
-            { lat: 30.0561, lng: 31.3302, place: "Nasr City" },
-            { lat: 30.2234, lng: 31.4712, place: "Obour" },
-            { lat: 30.3104, lng: 31.2189, place: "Shibin El Kom" },
-            { lat: 30.2456, lng: 31.4675, place: "Kafr Shokr" },
-            { lat: 30.3445, lng: 31.1604, place: "Tukh" },
-            { lat: 30.2421, lng: 31.3045, place: "Qalyub" },
-            { lat: 30.3247, lng: 31.2352, place: "Banha" },
-            { lat: 30.0674, lng: 31.3200, place: "Helwan" },
-            { lat: 30.0444, lng: 31.2357, place: "Downtown Cairo" }
-        ];
+        // const markers = [
+        //     { lat: 30.4674, lng: 31.1848, place: "Benha" },
+        //     { lat: 30.4674, lng: 31.1848, place: "Benha" },
+        //     { lat: 30.0561, lng: 31.3302, place: "Nasr City" },
+        //     { lat: 30.2234, lng: 31.4712, place: "Obour" },
+        //     { lat: 30.3104, lng: 31.2189, place: "Shibin El Kom" },
+        //     { lat: 30.2456, lng: 31.4675, place: "Kafr Shokr" },
+        //     { lat: 30.3445, lng: 31.1604, place: "Tukh" },
+        //     { lat: 30.2421, lng: 31.3045, place: "Qalyub" },
+        //     { lat: 30.3247, lng: 31.2352, place: "Banha" },
+        //     { lat: 30.0674, lng: 31.3200, place: "Helwan" },
+        //     { lat: 30.0444, lng: 31.2357, place: "Downtown Cairo" }
+        // ];
+
+        const markers = reports.map(report => ({
+            lat: report.latitude,
+            lng: report.longitude,
+            place: report.cityName,
+          }));
 
         const cityReportCount = {};
         markers.forEach(({ place }) => {
@@ -103,7 +127,7 @@ export default function Map() {
         return () => {
             map.remove();
         };
-    }, []);
+    }, [reports]);
 
     return (
         <div>

@@ -1,19 +1,14 @@
 import { useEffect, useState } from "react";
 import Table from "../Components/Table"
-import axios from "axios";
+import { Axios } from "../../API/Axios";
 import Skeleton from "react-loading-skeleton";
-import { baseURL2 } from "../../API/Api";
 export default function CityAdmins(){
     const [data , setData] = useState([])
     const [load , setLoad] = useState(true)
     useEffect(() => {
         setLoad(true)
         const fetchData = async () => {
-            await axios.get(`${baseURL2}/cityadmins` , {
-                headers: {
-                    Authorization: `${window.localStorage.getItem("token")}`
-                }
-            })
+            await Axios.get(`/cityadmins`)
             .then((response) => {
                 setData(response.data)
                 setLoad(false)

@@ -1,12 +1,11 @@
-import axios from "axios";
 import Input from "../Components/Input";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { Bounce } from "react-toastify";
-import { baseURL2 } from "../../API/Api";
 import Skeleton from "react-loading-skeleton";
+import { Axios } from "../../API/Axios";
 export default function AddAdmin() {
 
     const [cities, setCities] = useState([]);
@@ -17,9 +16,7 @@ export default function AddAdmin() {
     useEffect(() => {
         setCityLoad(true)
         const fetchData = async () => {
-            await axios.get(`${baseURL2}/governorates`, {
-                withCredentials: true
-            })
+            await Axios.get(`/governorates`)
             .then((response) => {
                 setGovs(response.data)
                 setLoad(false)
@@ -31,9 +28,7 @@ export default function AddAdmin() {
     async function GetCities(id){
         form.setFieldValue('cityId', '');
         setCityLoad(true);
-        await axios.get(`${baseURL2}/cities/${id}`, {
-            withCredentials: true
-        })
+        await Axios.get(`/cities/${id}`)
         .then((response) => {
             setCities(response.data);
             setCityLoad(false);
@@ -78,9 +73,8 @@ export default function AddAdmin() {
             const sendData = async () => {
                 setBtnLoad(true)
                 try{
-                    await axios.post("http://localhost:9090/api/V1/admin", values, {
-                        withCredentials: false,
-                    }).then((res) => {
+                    await Axios.post("/admin", values)
+                    .then((res) => {
                         console.log(res);
                         setBtnLoad(false)
                         toast.success('تمت العملية بنجاح', {

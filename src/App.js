@@ -16,10 +16,13 @@ import EditEmployee from './Dashboard/AddEdit/EditEmployee';
 import EditGovAdmin from './Dashboard/AddEdit/EditGovAdmin';
 import CityAnalysis from './Dashboard/Analysis/CityAnalysis';
 import GovAnalysis from './Dashboard/Analysis/GovAnalysis';
+import CheckAuth from './Auth/CheckAuth';
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route element={<CheckAuth />}>
+        <Route path="/login" element={<Login />} />
+      </Route>
       <Route path="/dashboard" element={<Dashboard />}>
         <Route path="add-admin" element={<AddAdmin />} />
         <Route path="add-employee" element={<AddEmployee />} />

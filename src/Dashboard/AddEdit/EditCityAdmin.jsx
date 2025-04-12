@@ -1,4 +1,3 @@
-import axios from "axios";
 import Input from "../Components/Input";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
@@ -7,7 +6,7 @@ import { toast } from "react-toastify";
 import { Bounce } from "react-toastify";
 import { useParams } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
-import { baseURL2 } from "../../API/Api";
+import { Axios } from "../../API/Axios";
 
 export default function AddAdmin() {
 
@@ -18,12 +17,10 @@ export default function AddAdmin() {
     const [cityLoad , setCityLoad] = useState(true)
     const [btnLoad , setBtnLoad] = useState(false)
     const { id } = useParams();
-    console.log(cities);
-    console.log(data);
     useEffect(() => {
         setLoad(true);
         const fetchData = async () => {
-            await axios.get(`${baseURL2}/cityadmin/${id}`)
+            await Axios.get(`/cityadmin/${id}`)
             .then((response) => {
                 setData(response.data);
             })
@@ -34,9 +31,7 @@ export default function AddAdmin() {
         setCityLoad(true)
         setLoad(true);
         const fetchData = async () => {
-            await axios.get(`${baseURL2}/governorates`, {
-                withCredentials: true
-            })
+            await Axios.get(`/governorates`)
             .then((response) => {
                 setGovs(response.data)
             })
@@ -49,9 +44,7 @@ export default function AddAdmin() {
         if (data.governorateId) {
             setCityLoad(true);
             const fetchData = async () => {
-                await axios.get(`${baseURL2}/cities/${data.governorateId}`, {
-                    withCredentials: true
-                })
+                await Axios.get(`/cities/${data.governorateId}`)
                 .then((response) => {
                     setCities(response.data);
                     setCityLoad(false);
@@ -64,9 +57,7 @@ export default function AddAdmin() {
     async function GetCities(id){
         form.setFieldValue('cityId', '');
         setCityLoad(true);
-        await axios.get(`${baseURL2}/cities/${id}`, {
-            withCredentials: true
-        })
+        await Axios.get(`/cities/${id}`)
         .then((response) => {
             setCities(response.data);
             setCityLoad(false);
@@ -93,8 +84,7 @@ export default function AddAdmin() {
                     .matches(
                     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/,
                     "كلمة المرور يجب أن تحتوي على حرف كبير وحرف صغير ورقم ورمز خاص"
-                    )
-                    .required("هذا الحقل مطلوب"),
+                    ),
             type: Yup.string().required('هذا الحقل مطلوب'),
             governorateId: Yup.string().when('type', {
                 is: (val) => val === '1999' || val === '1998',
@@ -112,9 +102,8 @@ export default function AddAdmin() {
             const sendData = async () => {
                 setBtnLoad(true)
                 try{
-                    await axios.post("http://localhost:9090/api/V1/admin", values, {
-                        withCredentials: false,
-                    }).then((res) => {
+                    await Axios.post("/admin", values)
+                    .then((res) => {
                         console.log(res);
                         setBtnLoad(false)
                         toast.success('تمت العملية بنجاح', {
