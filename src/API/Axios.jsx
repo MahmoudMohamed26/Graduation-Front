@@ -1,7 +1,7 @@
 import axios from "axios";
-import { baseURL2 } from "./Api";
+import { baseURL } from "./Api";
 
 export const Axios = axios.create({
-    baseURL:  baseURL2 ,
+    baseURL:  baseURL ,
     withCredentials: true,
 })

@@ -6,9 +6,8 @@ import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import white_logo from "../images/logo-white.png"
 import bg_image from "../images/bg-image.jpg"
-import axios from "axios";
-import { baseURL2 } from "../API/Api";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import { Axios } from "../API/Axios";
 
 export default function SignIn() {
     const [error, setError] = useState("");
@@ -32,8 +31,7 @@ export default function SignIn() {
             try {
                 setLoading(true);
                 setError("");
-                const res = await axios.post(`${baseURL2}/login`, values , {   withCredentials: true });
-                console.log(res)
+                await Axios.post(`/login`, values);
                 toast.success('تم تسجيل الدخول بنجاح', {
                     position: "top-left",
                     autoClose: 5000,
