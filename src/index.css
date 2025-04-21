@@ -22,6 +22,22 @@
     direction: rtl;
 }
 
+.dark .apexcharts-legend-text {
+    color: #EEE !important;
+}
+
+.dark tspan{
+    fill: #EEE !important;
+}
+
+.dark .apexcharts-xaxis-title-text{
+    fill: #EEE !important;
+}
+
+.dark .apexcharts-yaxis-title-text{
+    fill: #EEE !important;
+}
+
 @keyframes fadeSlideDown {
     from {
         opacity: 0;

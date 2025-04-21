@@ -177,7 +177,6 @@ export default function Reports(){
             status: 'On Hold',
         }
     ];    
-    
     const filteredData = data.filter((item) => {
         if(status === 'all') return true;
         return item.status.toLowerCase() === status.toLowerCase();
@@ -185,10 +184,10 @@ export default function Reports(){
     return(
         <div>
             <div className="flex justify-between items-center">
-                <h1 className="w-fit text-4xl relative before:absolute before:h-[1px] before:w-[calc(100%)] before:bg-slate-300 before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0">الشكاوي</h1>
+                <h1 className="w-fit text-4xl relative before:absolute before:h-[1px] before:w-[calc(100%)] before:dark:bg-[#363D3E] dark:text-[#EEE] before:bg-slate-300 before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0">الشكاوي</h1>
                 <div className="relative">
                     <select onChange={(e) => setStatus(e.target.value)} value={status}
-                        className="w-[200px] border text-right duration-300  text-sm border-[#e2e6f1] special_shadow rounded-md outline-none  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none cursor-pointer">
+                        className="w-[200px] border dark:bg-[#121313] dark:text-[#EEE] dark:border-[#333] text-right duration-300  text-sm border-[#e2e6f1] special_shadow rounded-md outline-none  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none cursor-pointer">
                         <option value="all">جميع الحالات</option>
                         <option value="On Hold">معلق</option>
                         <option value="In Progress">قيد التنفيذ</option>

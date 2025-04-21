@@ -4,6 +4,7 @@ import WordCut from "../../helpers/WordCut";
 import { CiWarning } from "react-icons/ci";
 import { RxCross1 } from "react-icons/rx";
 import { useState } from "react";
+import DepartmentMapper from "../../helpers/DepartmentMapper";
 export default function Table(props){
     const url = window.location.pathname.split("/")[window.location.pathname.split("/").length-1]
     const [showpop, setShowpop] = useState(false)
@@ -22,11 +23,11 @@ export default function Table(props){
     </th>
     ))
     const dataShow = props.data.map((item , index) => (
-        <tr className="hover:bg-gray-200 bg-[#F4F7FA] duration-300 odd:bg-gray-200" key={index}>
-        <td className="p-4 text-[15px] text-gray-800 ">{index + 1}</td>
+        <tr className="hover:bg-gray-200 dark:bg-[#1D1F20] dark:hover:bg-[#191A1A] dark:odd:bg-[#191A1A] bg-[#F4F7FA] duration-300 odd:bg-gray-200" key={index}>
+        <td className="p-4 text-[15px] dark:text-white text-gray-800 ">{index + 1}</td>
         {props.headers.map((item2, index2) => (
-            <td key={index2} className="p-4 text-sm text-gray-800">
-            {item2.key === 'status' ? (item[item2.key] === 'Completed' ? <span className="px-2 py-1 bg-green-200 text-green-800 rounded-md">مكتمل</span> : item[item2.key] === 'On Hold' ? <span className="px-2 py-1 bg-red-200 text-red-800 rounded-md">معلق</span> : <span className="px-2 py-1 bg-yellow-200 text-yellow-800 rounded-md">قيد التنفيذ</span>) : WordCut(item[item2.key] , 30)}
+            <td key={index2} className="p-4 text-sm dark:text-[#EEE] text-gray-800">
+            {item2.key === 'status' ? (item[item2.key] === 'Completed' ? <span className="px-2 py-1 bg-green-200 text-green-800 rounded-md">مكتمل</span> : item[item2.key] === 'On Hold' ? <span className="px-2 py-1 bg-red-200 text-red-800 rounded-md">معلق</span> : <span className="px-2 py-1 bg-yellow-200 text-yellow-800 rounded-md">قيد التنفيذ</span>) : item2.key === 'department' ? DepartmentMapper(item[item2.key]) : WordCut(item[item2.key], 30)}
             </td>
         ))}
         

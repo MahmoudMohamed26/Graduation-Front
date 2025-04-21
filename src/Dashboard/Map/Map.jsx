@@ -1,137 +1,247 @@
-import { useEffect, useState } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
-import { Axios } from "../../API/Axios";
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, GeoJSON, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import { Axios } from '../../API/Axios';
+import Skeleton from 'react-loading-skeleton';
 
-export default function Map() {
-    const [reports, setReports] = useState([]);
-    console.log(reports);
-    useEffect(() => {
-        const data = async () => {
-            try{
-                await Axios.get("/reports")
-                .then((res) => {
-                    setReports(res.data)
+// Fix default marker icon issues
+L.Icon.Default.mergeOptions({
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+});
 
-                })
-            }catch(err){
-                console.error(err)
-            }
+const governorates = {
+  "Cairo": 4103336,
+  "Giza": 3824206,
+  "Alexandria": 3061846,
+  "Qalyubia": 4103337,
+  "Sharqia": 4103407,
+  "Dakahlia": 4103403,
+  "Beheira": 3824513,
+  "Kafr El Sheikh": 4103405,
+  "Gharbia": 3584607,
+  "Monufia": 3824207,
+  "Faiyum": 3726124,
+  "Beni Suef": 3726170,
+  "Minya": 3726175,
+  "Assiut": 3726184,
+  "Sohag": 3726186,
+  "Qena": 3726189,
+  "Luxor": 3726211,
+  "Aswan": 3061757,
+  "Red Sea": 3061758,
+  "New Valley": 3061827,
+  "Matrouh": 3061826,
+  "North Sinai": 3060792,
+  "South Sinai": 3060793,
+  "Port Said": 4103406,
+  "Suez": 3062185,
+  "Ismailia": 3062184,
+  "Damietta": 4103404
+};
+
+const governorateNameMap = {
+  "القاهرة": "Cairo",
+  "الجيزة": "Giza",
+  "الإسكندرية": "Alexandria",
+  "القليوبية": "Qalyubia",
+  "الشرقية": "Sharqia",
+  "الدقهلية": "Dakahlia",
+  "البحيرة": "Beheira",
+  "كفر الشيخ": "Kafr El Sheikh",
+  "الغربية": "Gharbia",
+  "المنوفية": "Monufia",
+  "الفيوم": "Faiyum",
+  "بني سويف": "Beni Suef",
+  "المنيا": "Minya",
+  "أسيوط": "Assiut",
+  "سوهاج": "Sohag",
+  "قنا": "Qena",
+  "الأقصر": "Luxor",
+  "أسوان": "Aswan",
+  "البحر الأحمر": "Red Sea",
+  "الوادي الجديد": "New Valley",
+  "مطروح": "Matrouh",
+  "شمال سيناء": "North Sinai",
+  "جنوب سيناء": "South Sinai",
+  "بورسعيد": "Port Said",
+  "السويس": "Suez",
+  "الإسماعيلية": "Ismailia",
+  "دمياط": "Damietta"
+};
+
+const handleOverlayColor = (reportCount) => {
+  if (reportCount > 16) return { color: "#D0302C", fillColor: "#990E03" };
+  if (reportCount <= 5) return { color: "green", fillColor: "green" };
+  if (reportCount <= 16 && reportCount > 5) return { color: "#ff9800", fillColor: "#ffc107" };
+  return { color: "blue", fillColor: "lightblue" };
+};
+
+const Map = () => {
+  const [features, setFeatures] = useState([]);
+  const [reports, setReports] = useState([]);
+  const [load , setLoad] = useState(true)
+
+  useEffect(() => {
+
+
+    const fetchGeoData = async () => {
+      const cachedData = localStorage.getItem("geo-features");
+      const cacheTime = localStorage.getItem("geo-features-time");
+      const cacheValid = cachedData && cacheTime && (Date.now() - Number(cacheTime) < 24 * 60 * 60 * 1000);
+
+      let dynamicCounts = {};
+
+      try {
+        const response = await Axios.get("/reports/countbygovernorate");
+        const data = response.data;
+        data.forEach(item => {
+          const engName = governorateNameMap[item.name];
+          if (engName) {
+            dynamicCounts[engName] = item.count;
+          }
+        });
+      } catch (err) {
+        console.error("Error fetching report counts:", err);
+      }
+
+      if (cacheValid) {
+        const parsed = JSON.parse(cachedData);
+        // Filter to only include polygon features (no points/markers)
+        const filteredFeatures = parsed.filter(f => 
+          f.geometry.type === 'Polygon' || 
+          f.geometry.type === 'MultiPolygon'
+        );
+        
+        filteredFeatures.forEach(f => {
+          const name = f.properties.name;
+          f.properties.reportCount = dynamicCounts[name] || 0;
+        });
+        
+        setFeatures(filteredFeatures);
+        return;
+      }
+
+      const fetchedFeatures = [];
+      // Promise.all
+      for (const [name, id] of Object.entries(governorates)) {
+        const query = `
+          [out:json];
+          relation(${id});
+          out body;
+          >;
+          out skel qt;
+        `;
+
+        try {
+          const res = await fetch('https://overpass-api.de/api/interpreter', {
+            method: 'POST',
+            body: query,
+          });
+
+          const data = await res.json();
+          const osmtogeojson = await import('osmtogeojson');
+          const geojson = osmtogeojson.default(data);
+
+          // Filter to only include polygon features
+          const polygonFeatures = geojson.features.filter(f => 
+            f.geometry.type === 'Polygon' || 
+            f.geometry.type === 'MultiPolygon'
+          );
+
+          polygonFeatures.forEach((f) => {
+            f.properties.name = name;
+            f.properties.reportCount = dynamicCounts[name] || 0;
+          });
+
+          fetchedFeatures.push(...polygonFeatures);
+        } catch (err) {
+          console.error(`Error loading ${name}:`, err);
         }
-        data()
-    } , [])
-    useEffect(() => {
+      }
 
-        const map = L.map("map").setView([30.4662, 31.1845], 9);
+      setFeatures(fetchedFeatures);
+      localStorage.setItem("geo-features", JSON.stringify(fetchedFeatures));
+      localStorage.setItem("geo-features-time", Date.now().toString());
+    };
 
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            noWrap: true
-        }).addTo(map);
-        
-        const customIcon = L.icon({
-            iconUrl: markerIcon ,
-            shadowUrl: markerShadow ,
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
-        
+    const fetchReports = async () => {
+      try {
+        setLoad(true)
+        const res = await Axios.get("/reports");
+        setReports(res.data);
+      } catch (err) {
+        console.error("Error fetching reports:", err);
+      }
+      setLoad(false)
+    }
 
-        // const markers = [
-        //     { lat: 30.4674, lng: 31.1848, place: "Benha" },
-        //     { lat: 30.4674, lng: 31.1848, place: "Benha" },
-        //     { lat: 30.0561, lng: 31.3302, place: "Nasr City" },
-        //     { lat: 30.2234, lng: 31.4712, place: "Obour" },
-        //     { lat: 30.3104, lng: 31.2189, place: "Shibin El Kom" },
-        //     { lat: 30.2456, lng: 31.4675, place: "Kafr Shokr" },
-        //     { lat: 30.3445, lng: 31.1604, place: "Tukh" },
-        //     { lat: 30.2421, lng: 31.3045, place: "Qalyub" },
-        //     { lat: 30.3247, lng: 31.2352, place: "Banha" },
-        //     { lat: 30.0674, lng: 31.3200, place: "Helwan" },
-        //     { lat: 30.0444, lng: 31.2357, place: "Downtown Cairo" }
-        // ];
+    fetchGeoData();
+    fetchReports();
+  }, []);
 
-        const markers = reports.map(report => ({
-            lat: report.latitude,
-            lng: report.longitude,
-            place: report.cityName,
-          }));
+  const onEachFeature = (feature, layer) => {
+    const { name, reportCount } = feature.properties;
+    const content = `<strong>${name}</strong><br/>Reports: ${reportCount}`;
+    layer.on({
+      click: () => layer.bindPopup(content).openPopup()
+    });
+  };
 
-        const cityReportCount = {};
-        markers.forEach(({ place }) => {
-            cityReportCount[place] = (cityReportCount[place] || 0) + 1;
-        });
 
-        markers.forEach(({ lat, lng, place }) => {
-            L.marker([lat, lng], { icon: customIcon })
-                .addTo(map)
-                .bindPopup(`<b>Report</b><br>Location: ${place}`);
-        });
+  return (
+    load ? <>
+            <Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={850} width="100%"/>
+          </> 
+          : <div className='relative z-10'>
+        <MapContainer className='outline-none' center={[29.8206, 30.8025]} zoom={8} style={{ height: 'calc(100vh - 114px)', width: '100%' }}>
+        <TileLayer
+          attribution='&copy; <a href="https://carto.com/">CARTO</a> & OpenStreetMap contributors'
+          url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
+          noWrap={true}
+        />
 
-        const handleOverlayColor = (reportCount) => {
-            if (reportCount > 5) return { color: "red", fillColor: "red" };
-            if (reportCount <= 2) return { color: "green", fillColor: "green" };
-            if (reportCount <= 5 && reportCount > 2) return { color: "#ff9800", fillColor: "#ffc107" };
-            return { color: "blue", fillColor: "lightblue" };
-        };
+        {/* Dynamic Report Markers */}
+        {reports.map((report , index) => (
+          report.latitude && report.longitude && (
+            <Marker 
+              key={`report-${report.reportId || index}`} 
+              position={[report.latitude, report.longitude]}
+            >
+              <Popup>
+                <strong>Report #{report.reportId}</strong><br />
+                {report.cityName || "No city name"}<br />
+                {report.title || "No title"}
+              </Popup>
+            </Marker>
+          )
+        ))}
 
-        fetch("/qalyubia.json")
-        .then(response => response.json())
-        .then(geojsonData => {
-            if (!geojsonData || !geojsonData.features) {
-                throw new Error("Invalid GeoJSON data for Qalyubia.");
-            }
+        {/* Governorate Overlays - Polygons Only */}
+        {features.map((feature, idx) => (
+          <GeoJSON
+            key={`geo-${idx}`}
+            data={feature}
+            style={() => {
+              const { color, fillColor } = handleOverlayColor(feature.properties.reportCount);
+              return {
+                color: color,
+                weight: 2,
+                opacity: 0.6,
+                fillColor: fillColor,
+                fillOpacity: 0.3
+              };
+            }}
+            onEachFeature={onEachFeature}
+            pointToLayer={null}
+          />
+        ))}
+      </MapContainer>
+    </div>
+  );
+};
 
-            const qalyubiaReportCount = (cityReportCount["Benha"] || 0) + (cityReportCount["Obour"] || 0);
-            const overlayStyle = handleOverlayColor(qalyubiaReportCount);
-
-            L.geoJSON(geojsonData, {
-                style: (feature) => ({
-                    color: overlayStyle.color,
-                    weight: 2,
-                    opacity: 0.6,
-                    fillColor: overlayStyle.fillColor,
-                    fillOpacity: 0.3
-                }),
-                filter: (feature) => feature.geometry && feature.geometry.type !== "Point"
-            }).addTo(map).bindPopup("<b>Qalyubia Governorate</b>");
-        })
-        .catch(error => console.error("Error loading Qalyubia GeoJSON:", error));
-
-        fetch("/cairo.json")
-        .then(response => response.json())
-        .then(geojsonData => {
-            if (!geojsonData || !geojsonData.features) {
-                throw new Error("Invalid GeoJSON data for Cairo.");
-            }
-
-            const cairoReportCount = cityReportCount["Nasr City"] || 0;
-            const overlayStyle = handleOverlayColor(cairoReportCount);
-
-            L.geoJSON(geojsonData, {
-                style: (feature) => ({
-                    color: overlayStyle.color,
-                    weight: 2,
-                    opacity: 0.6,
-                    fillColor: overlayStyle.fillColor,
-                    fillOpacity: 0.3
-                }),
-                filter: (feature) => feature.geometry && feature.geometry.type !== "Point"
-            }).addTo(map).bindPopup("<b>Cairo Governorate</b>");
-        })
-        .catch(error => console.error("Error loading Cairo GeoJSON:", error));
-
-        return () => {
-            map.remove();
-        };
-    }, [reports]);
-
-    return (
-        <div>
-            <div id="map" className="w-full h-[calc(100vh-74px-40px)] relative z-10"></div>
-        </div>
-    );
-}
+export default Map;

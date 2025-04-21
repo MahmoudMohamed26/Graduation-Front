@@ -7,6 +7,7 @@
     "cra-template": "1.2.0",
     "formik": "^2.4.6",
     "jest": "^27.5.1",
+    "osmtogeojson": "^3.0.0-beta.5",
     "react": "^19.0.0",
     "react-apexcharts": "^1.7.0",
     "react-cookie": "^8.0.1",

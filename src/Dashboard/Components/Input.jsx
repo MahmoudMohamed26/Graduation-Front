@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
-export default function Input({ label, name, formik, placeholder, password }) {
+export default function Input({ label, name, disabled, formik, optional, placeholder, password }) {
     const [showPass, setShowPass] = useState(false);
     const isPassword = password || false;
 
     return (
         <div className="flex-1 mb-1">
-            <label className="text-sm">{label}</label>
+            <label className="text-sm dark:text-white">{label}{optional && " (اختياري):"}</label>
             <div className="relative">
                 <input
                     autoComplete="true"
+                    disabled={disabled}
                     type={!isPassword ? "text" : showPass ? "text" : "password"}
-                    className={`w-full border text-right duration-300 text-sm py-2 border-[#e2e6f1] rounded-md outline-none p-2 my-2 ${
-                        formik.errors[name] && formik.touched[name] ? "border-red-500" : "special_shadow"
+                    className={`w-full border dark:text-white dark:bg-[#121313] dark:border-[#333] text-right duration-300 text-sm py-2 border-[#e2e6f1] rounded-md outline-none p-2 my-2 ${
+                        formik.errors[name] && formik.touched[name] ? "!border-red-500" : "special_shadow"
                     }`}
                     placeholder={placeholder}
                     name={name}

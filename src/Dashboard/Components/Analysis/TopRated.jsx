@@ -40,7 +40,7 @@ export default function TopRated(){
     ];
 
     const showData = data.map((el , index) => (
-        <div key={index} className={`flex justify-between items-center py-5 ${index === 0 ? "" : "border-t"}`}>
+        <div key={index} className={`flex justify-between items-center py-5 ${index === 0 ? "" : "border-t dark:border-[#363D3E]"}`}>
             <h2 className="text-sm">{el.name}</h2>
             <p className="flex items-center text-sm gap-1">
                 <span>{el.rating}</span>
@@ -50,10 +50,10 @@ export default function TopRated(){
     ))
 
     return(
-        <div className="bg-white rounded-md px-4 py-4">
-            <h1 className="w-fit text-sm relative before:absolute before:h-[1px] before:w-[calc(100%)] before:bg-slate-300 before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0">اعلى الموظفيين تقييماً</h1>
+        <div className="bg-white dark:bg-[#191A1A] rounded-md px-4 py-4">
+            <h1 className="w-fit text-sm relative before:absolute before:h-[1px] before:w-[calc(100%)] before:bg-slate-300 before:dark:bg-[#363D3E] before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] dark:text-white after:bottom-[-15px] after:right-0">اعلى الموظفيين تقييماً</h1>
             <div className="mt-10">
-                <div>
+                <div className="text-black dark:text-white">
                     {showData}
                 </div>
             </div>

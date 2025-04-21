@@ -43,8 +43,8 @@ export default function CurrentReports() {
 
     return (
         <div>
-            <div id="chart" className="bg-white rounded-md px-2 py-4">
-                <h1 className="w-fit text-xl relative before:absolute before:h-[1px] before:w-[calc(100%)] before:bg-slate-300 before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0">معدل الشكاوي</h1>
+            <div id="chart" className="bg-white dark:bg-[#191A1A] rounded-md px-2 py-4">
+                <h1 className="w-fit text-xl relative before:absolute before:h-[1px] before:w-[calc(100%)] before:bg-slate-300 before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0 dark:text-white before:dark:bg-[#363D3E]">معدل الشكاوي</h1>
                 <div className="mt-10"><ReactApexChart options={state.options} series={state.series} type="area" height={350} /></div>
             </div>
             <div id="html-dist"></div>

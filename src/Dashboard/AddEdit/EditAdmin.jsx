@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import { Axios } from "../../API/Axios";
 
-export default function AddAdmin() {
+export default function EditAdmin() {
 
     const [cities, setCities] = useState([]);
     const [govs, setGovs] = useState([]);
@@ -67,6 +67,7 @@ export default function AddAdmin() {
     const form = useFormik({
         enableReinitialize: true,
         initialValues: {
+            adminId: id,
             firstName: data.firstName || '',
             lastName: data.lastName || '',
             email: data.email || '',
@@ -82,8 +83,8 @@ export default function AddAdmin() {
             email: Yup.string().email('بريد إلكتروني غير صالح').required('هذا الحقل مطلوب'),
             hashPassword: Yup.string()
                     .matches(
-                    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/,
-                    "كلمة المرور يجب أن تحتوي على حرف كبير وحرف صغير ورقم ورمز خاص"
+                        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%?&]).{8,}$/,
+                        "كلمة المرور يجب أن تكون أكثر من 8 حروف وتحتوي على حرف كبير وحرف صغير ورقم ورمز خاص"
                     ),
             type: Yup.string().required('هذا الحقل مطلوب'),
             governorateId: Yup.string().when('type', {
@@ -102,7 +103,7 @@ export default function AddAdmin() {
             const sendData = async () => {
                 setBtnLoad(true)
                 try{
-                    await Axios.post("/admin", values)
+                    await Axios.put("/admin", values)
                     .then((res) => {
                         console.log(res);
                         setBtnLoad(false)
@@ -142,12 +143,12 @@ export default function AddAdmin() {
     return (
         <div>
             <div className="flex">
-                <h1 className="w-fit text-4xl relative before:absolute before:h-[1px] before:w-full before:bg-slate-300 before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0">
-                    اضافة مشرف
+                <h1 className="w-fit text-4xl relative before:absolute before:h-[1px] before:w-full before:bg-slate-300 before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0 before:dark:bg-[#363D3E] dark:text-[#EEE]">
+                    تعديل مشرف
                 </h1>
             </div>
-            {load ? <div className="mt-10"><Skeleton count={1} height={380} width="100%" /></div> : <div className="bg-white mt-10 px-2 text-right rounded-sm">
-                <h2 className="text-2xl py-5 border-b border-[#f3f2f9]">البيانات</h2>
+            {load ? <div className="mt-10"><Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={380} width="100%" /></div> : <div className="bg-white mt-10 px-2 text-right rounded-sm dark:border-[#363D3E] dark:bg-[#191A1A]">
+                <h2 className="text-2xl py-5 border-b border-[#f3f2f9] dark:border-[#363D3E] dark:bg-[#191A1A] dark:text-white">البيانات</h2>
                 
                 <form className="py-5" onSubmit={form.handleSubmit}>
                     <div className="flex flex-col lg:flex-row lg:gap-5">
@@ -155,9 +156,9 @@ export default function AddAdmin() {
                         <Input label="الأسم الأخير:" name="lastName" formik={form} placeholder='ادخل الأسم' />
                     </div>
                     <div className="flex flex-col lg:flex-row lg:gap-5">
-                        <Input label="البريد الألكتروني:" name="email" formik={form} placeholder='ادخل الرقم' />
-                        <Input label="الرقم القومي:" name="nationalId" formik={form} placeholder='ادخل الرقم' />
-                        <Input label="كلمة السر:" name="hashPassword" formik={form} placeholder='************' password={true} />
+                        <Input label="البريد الألكتروني:" name="email" disabled={true} formik={form} placeholder='ادخل الرقم' />
+                        <Input label="الرقم القومي:" name="nationalId" disabled={true} formik={form} placeholder='ادخل الرقم' />
+                        <Input label="كلمة السر" name="hashPassword" optional={true} formik={form} placeholder='************' password={true} />
                     </div>
                     <div className="flex flex-col lg:flex-row lg:gap-5">
                     <div className="flex-1">
@@ -167,7 +168,7 @@ export default function AddAdmin() {
                                         onChange={form.handleChange}
                                         onBlur={form.handleBlur}
                                         value={form.values.type}
-                                        className={`w-full border text-right duration-300  text-sm border-[#e2e6f1] rounded-md outline-none p-2 my-2  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none cursor-pointer ${form.errors.type && form.touched.type ? 'border-red-500' : 'special_shadow'}`}>
+                                        className={`w-full border text-right duration-300  text-sm border-[#e2e6f1] dark:bg-[#121313] dark:text-white dark:border-[#333] rounded-md outline-none p-2 my-2  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none cursor-pointer ${form.errors.type && form.touched.type ? '!border-red-500' : 'special_shadow'}`}>
                                         <option disabled value="">نوع المشرف</option>
                                         <option value="1999">مشرف محافظة</option>
                                         <option value="1998">مشرف مدينة</option>
@@ -189,7 +190,7 @@ export default function AddAdmin() {
                                         onChange={(e) => { GetCities(e.target.value); form.handleChange(e);}}
                                         onBlur={form.handleBlur}
                                         value={form.values.governorateId}
-                                        className={`w-full border text-right duration-300  text-sm border-[#e2e6f1] rounded-md outline-none p-2 my-2  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none cursor-pointer ${form.errors.governorateId && form.touched.governorateId ? 'border-red-500' : 'special_shadow'}`}>
+                                        className={`w-full border text-right duration-300  text-sm border-[#e2e6f1] dark:bg-[#121313] dark:text-white dark:border-[#333] rounded-md outline-none p-2 my-2  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none cursor-pointer ${form.errors.governorateId && form.touched.governorateId ? '!border-red-500' : 'special_shadow'}`}>
                                         <option disabled value="">اختر المحافظة</option>
                                         {govs.map((gov , index) => (
                                             <option key={index} value={gov.governorateId}>{gov.name}</option>
@@ -204,7 +205,7 @@ export default function AddAdmin() {
                                 )}
                             </div>
                         )}
-                        {form.values.type === 1998 && form.values.governorateId &&  (
+                        {(form.values.type === '1998' || form.values.type === 1998) && form.values.governorateId &&  (
                             <div className="relative flex-1">
                                 <div className="relative">
                                     <select
@@ -213,7 +214,7 @@ export default function AddAdmin() {
                                         onChange={form.handleChange}
                                         onBlur={form.handleBlur}
                                         value={form.values.cityId}
-                                        className={`w-full border text-right duration-300  text-sm border-[#e2e6f1] rounded-md outline-none p-2 my-2  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none ${cityLoad ? "" : "cursor-pointer"} ${form.errors.cityId && form.touched.cityId ? 'border-red-500' : 'special_shadow'}`}>
+                                        className={`w-full border text-right duration-300  text-sm border-[#e2e6f1] dark:bg-[#121313] dark:text-white dark:border-[#333] rounded-md outline-none p-2 my-2  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none ${cityLoad ? "" : "cursor-pointer"} ${form.errors.cityId && form.touched.cityId ? '!border-red-500' : 'special_shadow'}`}>
                                         <option disabled value=''>{cityLoad ? "جاري تحميل المدن..." : "اختر المدينة"}</option>
                                         {cities.map((city , index) => (
                                             <option key={index} value={city.cityId}>{city.name}</option>
