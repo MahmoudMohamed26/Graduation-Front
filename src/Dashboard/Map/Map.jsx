@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import iconUrl from 'leaflet/dist/images/marker-icon.png';
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 import { Axios } from '../../API/Axios';
 import Skeleton from 'react-loading-skeleton';
 
 // Fix default marker icon issues
+delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
+  iconUrl: new URL(iconUrl, import.meta.url).href,
+  shadowUrl: new URL(shadowUrl, import.meta.url).href,
 });
 
 const governorates = {
@@ -84,7 +85,7 @@ const Map = () => {
   const [features, setFeatures] = useState([]);
   const [reports, setReports] = useState([]);
   const [load , setLoad] = useState(true)
-  const [boundiesLoad , setBoundiesLoad] = useState(false)
+  const [boundriesLoad , setBoundriesLoad] = useState(false)
 
   useEffect(() => {
 
@@ -138,15 +139,16 @@ const Map = () => {
         `;
 
         try {
-          setBoundiesLoad(true)
+          setBoundriesLoad(true)
           const res = await fetch('https://overpass-api.de/api/interpreter', {
             method: 'POST',
             body: query,
           });
+
           const data = await res.json();
           const osmtogeojson = await import('osmtogeojson');
           const geojson = osmtogeojson.default(data);
-          setBoundiesLoad(false)
+          setBoundriesLoad(false)
           // Filter to only include polygon features
           const polygonFeatures = geojson.features.filter(f => 
             f.geometry.type === 'Polygon' || 
@@ -194,7 +196,7 @@ const Map = () => {
 
 
   return (
-    load || boundiesLoad ? <>
+    load || boundriesLoad ? <>
             <Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={850} width="100%"/>
           </> 
           : <div className='relative z-10'>
@@ -211,6 +213,7 @@ const Map = () => {
             <Marker 
               key={`report-${report.reportId || index}`} 
               position={[report.latitude, report.longitude]}
+              
             >
               <Popup>
                 <strong>Report #{report.reportId}</strong><br />
