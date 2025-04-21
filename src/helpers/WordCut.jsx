@@ -5,5 +5,3 @@ export default function WordCut(word , length){
         return word
     }
 }
-
-
