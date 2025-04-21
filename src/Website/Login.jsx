@@ -40,7 +40,7 @@ export default function SignIn() {
                     pauseOnHover: true,
                     draggable: false,
                     progress: undefined,
-                    theme: "light",
+                    theme: document.documentElement.classList.contains("dark") ? "dark" : "light",
                     transition: Bounce,
                     });
                 window.location.href = "/dashboard";

@@ -84,6 +84,7 @@ const Map = () => {
   const [features, setFeatures] = useState([]);
   const [reports, setReports] = useState([]);
   const [load , setLoad] = useState(true)
+  const [boundiesLoad , setBoundiesLoad] = useState(false)
 
   useEffect(() => {
 
@@ -137,15 +138,15 @@ const Map = () => {
         `;
 
         try {
+          setBoundiesLoad(true)
           const res = await fetch('https://overpass-api.de/api/interpreter', {
             method: 'POST',
             body: query,
           });
-
           const data = await res.json();
           const osmtogeojson = await import('osmtogeojson');
           const geojson = osmtogeojson.default(data);
-
+          setBoundiesLoad(false)
           // Filter to only include polygon features
           const polygonFeatures = geojson.features.filter(f => 
             f.geometry.type === 'Polygon' || 
@@ -193,7 +194,7 @@ const Map = () => {
 
 
   return (
-    load ? <>
+    load || boundiesLoad ? <>
             <Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={850} width="100%"/>
           </> 
           : <div className='relative z-10'>

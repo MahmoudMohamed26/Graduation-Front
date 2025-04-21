@@ -74,9 +74,11 @@ export default function AddEmployee() {
                 const { governorateId, ...filteredValues } = values;
                 setBtnLoad(true)
                 try{
-                    await Axios.post("/employee", filteredValues)
-                    .then(() => {
+                    await Axios.post("/employees", filteredValues)
+                    .then((res) => {
                         setBtnLoad(false);
+                        console.log(res);
+                        console.log(values);
                         toast.success('تمت العملية بنجاح', {
                             position: "top-left",
                             autoClose: 5000,
@@ -85,7 +87,7 @@ export default function AddEmployee() {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "light",
+                            theme: document.documentElement.classList.contains("dark") ? "dark" : "light",
                             transition: Bounce,
                             });
                         // resetForm();
@@ -101,7 +103,7 @@ export default function AddEmployee() {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "light",
+                            theme: document.documentElement.classList.contains("dark") ? "dark" : "light",
                             transition: Bounce,
                         });
                     }else{
@@ -114,7 +116,7 @@ export default function AddEmployee() {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "light",
+                            theme: document.documentElement.classList.contains("dark") ? "dark" : "light",
                             transition: Bounce,
                         });
                     }

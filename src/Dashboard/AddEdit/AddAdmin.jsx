@@ -84,7 +84,7 @@ export default function AddAdmin() {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "light",
+                            theme: document.documentElement.classList.contains("dark") ? "dark" : "light",
                             transition: Bounce,
                             });
                         resetForm();
@@ -100,7 +100,7 @@ export default function AddAdmin() {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "light",
+                            theme: document.documentElement.classList.contains("dark") ? "dark" : "light",
                             transition: Bounce,
                         });
                     }else{
@@ -113,7 +113,7 @@ export default function AddAdmin() {
                             pauseOnHover: true,
                             draggable: false,
                             progress: undefined,
-                            theme: "light",
+                            theme: document.documentElement.classList.contains("dark") ? "dark" : "light",
                             transition: Bounce,
                         });
                     }
