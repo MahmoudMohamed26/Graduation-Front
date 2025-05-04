@@ -6,17 +6,22 @@ import MenuContext from './Context/MenuContext';
 import { AuthProvider } from './Context/AuthContext';
 import 'react-loading-skeleton/dist/skeleton.css'
 import './index.css';
+import { QueryClient , QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient()
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Router>
-      <AuthProvider>
-        <MenuContext>
-            <App />
-        </MenuContext>
-      </AuthProvider>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <AuthProvider>
+          <MenuContext>
+              <App />
+          </MenuContext>
+        </AuthProvider>
+      </Router>
+    </QueryClientProvider>
   </React.StrictMode>
 );
 

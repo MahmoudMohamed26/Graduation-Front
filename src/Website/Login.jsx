@@ -20,7 +20,6 @@ export default function SignIn() {
         password: Yup.string()
             .required("كلمة المرور مطلوبة"),
     });
-    console.log("BASE_URL:", process.env.REACT_APP_BASE_URL);
     const login = useFormik({
         initialValues: {
             username: "",

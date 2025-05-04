@@ -1,29 +1,28 @@
 import Input from "../Components/Input";
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { Bounce } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
 import { Axios } from "../../API/Axios";
+import { useQuery } from "@tanstack/react-query";
 export default function AddAdmin() {
 
     const [cities, setCities] = useState([]);
-    const [govs, setGovs] = useState([]);
-    const [load , setLoad] = useState(true)
     const [cityLoad , setCityLoad] = useState(true)
     const [btnLoad , setBtnLoad] = useState(false)
-    useEffect(() => {
-        setCityLoad(true)
-        const fetchData = async () => {
-            await Axios.get(`/governorates`)
-            .then((response) => {
-                setGovs(response.data)
-                setLoad(false)
-            })
-        }
-        fetchData()
-    } , [])
+
+    const fetchData = async () => {
+        const res = await Axios.get(`/governorates`)
+        return res.data
+    }
+
+    const {data: govs , isLoading: load} = useQuery({
+        queryKey: ['governorates'],
+        queryFn: fetchData,
+        staleTime: 3e3 * 60,
+    })
 
     async function GetCities(id){
         form.setFieldValue('cityId', '');
@@ -88,6 +87,7 @@ export default function AddAdmin() {
                             transition: Bounce,
                             });
                         resetForm();
+                        
                     })
                 }
                 catch(err){

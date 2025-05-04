@@ -203,7 +203,6 @@ const Map = () => {
     });
   };
 
-
   return (
     load || boundriesLoad ? <>
             <Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={850} width="100%"/>

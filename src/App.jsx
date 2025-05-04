@@ -12,7 +12,6 @@ import Reports from './Dashboard/Reports/Reports';
 import SingleReport from './Dashboard/Reports/SingleReport';
 import EditAdmin from './Dashboard/AddEdit/EditAdmin';
 import EditEmployee from './Dashboard/AddEdit/EditEmployee';
-import EditGovAdmin from './Dashboard/AddEdit/EditGovAdmin';
 import CityAnalysis from './Dashboard/Analysis/CityAnalysis';
 import GovAnalysis from './Dashboard/Analysis/GovAnalysis';
 import PublicRoute from './Auth/PublicRoute';
@@ -32,7 +31,7 @@ function App() {
           <Route path="city-admins" element={<CityAdmins />} />
           <Route path="city-admins/:id" element={<EditAdmin />} />
           <Route path="governorate-admins" element={<GovAdmins />} />
-          <Route path="governorate-admins/:id" element={<EditGovAdmin />} />
+          <Route path="governorate-admins/:id" element={<EditAdmin />} />
           <Route path="employees" element={<Employees />} />
           <Route path="employees/:id" element={<EditEmployee />} />
           <Route path="reports" element={<Reports />}/>

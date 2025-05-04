@@ -1,20 +1,59 @@
 import { Link } from "react-router-dom"
 import { FaRegEye } from "react-icons/fa";
-import WordCut from "../../helpers/WordCut";
+import wordCut from "../../helpers/WordCut";
 import { CiWarning } from "react-icons/ci";
 import { RxCross1 } from "react-icons/rx";
 import { useState } from "react";
-import DepartmentMapper from "../../helpers/DepartmentMapper";
+import departmentMapper from "../../helpers/DepartmentMapper";
+import dateFormater from "../../helpers/DateFormater";
+import { Axios } from "../../API/Axios";
+import { Bounce, toast } from "react-toastify";
 export default function Table(props){
     const url = window.location.pathname.split("/")[window.location.pathname.split("/").length-1]
     const [showpop, setShowpop] = useState(false)
-    const [removeId, setRemoveId] = useState(null)
-    function HandleDeleteConfirmation(id){
+    const [data , setData] = useState(props.data)
+    const [ removeId , setRemoveId] = useState(null)
+    const [ removeType , setRemoveType] = useState(null)
+    const [ lastDelete , setLastDelete] = useState(false)
+    function HandleDeleteConfirmation(id , type){
         setShowpop(true)
         setRemoveId(id)
+        setRemoveType(type)
     }
-    function HandleRemove(){
-        console.log("Removed : " + removeId)
+
+    async function HandleRemove(){
+        setLastDelete(true)
+        try{
+            await Axios.delete(`${props.type === 'employees' ? `/employees/${removeId}` : `/admin/${removeId}/type/${removeType}`}`)
+            toast.success('تمت العملية بنجاح', {
+                position: "top-left",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: document.documentElement.classList.contains("dark") ? "dark" : "light",
+                transition: Bounce,
+                });
+                setData((old) => {
+                    return old.filter((item) => props.type === "employees" ? item.empId !== removeId : item.adminId !== removeId)
+                })
+        }catch(err){
+            console.log(err);
+            toast.error('حدث خطأ اثناء التنفيذ', {
+                position: "top-left",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: document.documentElement.classList.contains("dark") ? "dark" : "light",
+                transition: Bounce,
+            });
+        }
+        setLastDelete(false)
         setShowpop(false)
     }
     const headersShow = props.headers.map((element , index) => (
@@ -22,16 +61,16 @@ export default function Table(props){
     {element.name}
     </th>
     ))
-    const dataShow = props.data.map((item , index) => (
+    const dataShow = data.map((item , index) => (
         <tr className="hover:bg-gray-200 dark:bg-[#1D1F20] dark:hover:bg-[#191A1A] dark:odd:bg-[#191A1A] bg-[#F4F7FA] duration-300 odd:bg-gray-200" key={index}>
         <td className="p-4 text-[15px] dark:text-white text-gray-800 ">{index + 1}</td>
         {props.headers.map((item2, index2) => (
             <td key={index2} className="p-4 text-sm dark:text-[#EEE] text-gray-800">
-            {item2.key === 'status' ? (item[item2.key] === 'Completed' ? <span className="px-2 py-1 bg-green-200 text-green-800 rounded-md">مكتمل</span> : item[item2.key] === 'On Hold' ? <span className="px-2 py-1 bg-red-200 text-red-800 rounded-md">معلق</span> : <span className="px-2 py-1 bg-yellow-200 text-yellow-800 rounded-md">قيد التنفيذ</span>) : item2.key === 'department' ? DepartmentMapper(item[item2.key]) : WordCut(item[item2.key], 30)}
+            {item2.key === 'status' ? (item[item2.key] === 'Completed' ? <span className="px-2 py-1 bg-green-200 text-green-800 rounded-md">مكتمل</span> : item[item2.key] === 'On Hold' ? <span className="px-2 py-1 bg-red-200 text-red-800 rounded-md">معلق</span> : <span className="px-2 py-1 bg-yellow-200 text-yellow-800 rounded-md">قيد التنفيذ</span>) : item2.key === 'department' ? wordCut(departmentMapper(item[item2.key]) , 15) : item2.key === 'createdAt' ? dateFormater(item[item2.key]) : wordCut(item[item2.key], 30)}
             </td>
         ))}
         
-            {url === 'reports' ? (<td className="py-4 flex justify-center"><Link to={`${item.id}`}><FaRegEye className="cursor-pointer !hover:text-[#604CC7]" color="#725DFE" size={20} /></Link></td>) : (<td><Link to={`${item.adminId}`}>
+            {url === 'reports' ? (<td className="py-4 flex justify-center"><Link to={`${item.reportId}`}><FaRegEye className="cursor-pointer !hover:text-[#604CC7]" color="#725DFE" size={20} /></Link></td>) : (<td><Link to={`${props.url === "admins" ? item.adminId : item.empId}`}>
             <button className="mr-4" title="Edit">
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +89,7 @@ export default function Table(props){
             </button>
             </Link>
             <button
-                onClick={() => HandleDeleteConfirmation(item.adminId)}
+                onClick={() => HandleDeleteConfirmation(props.type === "employees" ? item.empId : item.adminId , item.type)}
                 className="mr-4"
                 title="Delete"
             >
@@ -82,13 +121,21 @@ export default function Table(props){
                         <p className="mt-5">هل أنت متأكد من أنك ترغب في حذف هذا العنصر ؟</p>
                         <p className="mt-5">يرجى العلم أن هذه العملية نهائية ولا يمكن التراجع عنها .</p>
                         <div className="mt-10 flex gap-2">
-                            <button onClick={HandleRemove} className="py-1 px-8 text-white font-semibold rounded-sm bg-red-600 duration-300 hover:bg-red-700">حذف</button>
+                            <button onClick={HandleRemove} disabled={lastDelete} className="py-1 px-12 text-white font-semibold rounded-sm bg-red-600 duration-300 hover:bg-red-700">
+                                {lastDelete ? <div role="status">
+                                <svg aria-hidden="true" className="inline w-4 h-4 text-gray-200 animate-spin fill-[#711a19]" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                </svg>
+                                <span className="mr-3">جاري التنفيذ...</span>
+                        </div> : "حذف"}
+                        </button>
                             <button onClick={(prev) => setShowpop(!prev)} className="py-1 flex-1 border duration-300 hover:border-[#333] text-sm px-4 font-semibold rounded-sm">تراجع</button>
                         </div>
                     </div>
                 </div>
             </>)}
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto ">
                 <table className="min-w-full bg-white">
                     <thead className="bg-[#725DFE] text-sm text-white whitespace-nowrap">
                         <tr>

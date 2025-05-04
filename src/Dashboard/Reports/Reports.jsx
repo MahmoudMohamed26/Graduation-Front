@@ -1,5 +1,8 @@
 import { useState } from "react";
 import Table from "../Components/Table"
+import { Axios } from "../../API/Axios";
+import { useQuery } from "@tanstack/react-query";
+import Skeleton from "react-loading-skeleton";
 export default function Reports(){
     const [status, setStatus] = useState('all');
     const headers = [{
@@ -9,178 +12,40 @@ export default function Reports(){
         name: 'الوصف',
         key: 'description',
     },{
-        name: 'المحافظة',
-        key: 'governorate',
-    },{
         name: 'المدينه',
-        key: 'city',
+        key: 'cityName',
     },{
         name: 'رقم الهاتف',
-        key: 'phone',
+        key: 'contactInfo',
+    },{
+        name: 'تاريخ الإنشاء',
+        key: 'createdAt',
+    },{
+        name: 'استلمها',
+        key: 'assignedEmployeeName',
     },{
         name: 'القسم',
         key: 'department',
     },{
         name: 'الحاله',
-        key: 'status',
+        key: 'currentStatus',
     }]
     
-    const data = [
-        {
-            id: 1,
-            title: 'مشروع الكهرباء في حي مصر الجديدة',
-            description: 'انقطاع الكهرباء المستمر في المنطقة بسبب ضعف المحولات.',
-            governorate: 'القاهرة',
-            city: 'مصر الجديدة',
-            phone: '01012345678',
-            department: 'الكهرباء',
-            status: 'Completed',
-        },
-        {
-            id: 2,
-            title: 'مشروع صيانة شبكات المياه في الجيزة',
-            description: 'تسرب المياه في بعض المناطق بسبب تهالك الشبكات.',
-            governorate: 'الجيزة',
-            city: 'الهرم',
-            phone: '01023456789',
-            department: 'الماء',
-            status: 'In Progress',
-        },
-        {
-            id: 3,
-            title: 'تحسين خدمات الإنترنت في الإسماعيلية',
-            description: 'تدني سرعة الإنترنت في معظم المناطق بسبب ضغط الشبكة.',
-            governorate: 'الإسماعيلية',
-            city: 'الإسماعيلية',
-            phone: '01034567890',
-            department: 'الاتصالات',
-            status: 'On Hold',
-        },
-        {
-            id: 4,
-            title: 'إمدادات الغاز في مدينة دمياط',
-            description: 'انقطاع الغاز في بعض المناطق لفترات طويلة بسبب الأعطال.',
-            governorate: 'دمياط',
-            city: 'دمياط',
-            phone: '01045678901',
-            department: 'الغاز',
-            status: 'Completed',
-        },
-        {
-            id: 5,
-            title: 'مشروع الكهرباء في حي المعادي',
-            description: 'الأعطال المتكررة في شبكة الكهرباء تسبب انقطاعات طويلة.',
-            governorate: 'القاهرة',
-            city: 'المعادي',
-            phone: '01056789012',
-            department: 'الكهرباء',
-            status: 'In Progress',
-        },
-        {
-            id: 6,
-            title: 'مشروع تحسين المياه في المنوفية',
-            description: 'المياه غير الصالحة للاستخدام بسبب التلوث في بعض المناطق.',
-            governorate: 'المنوفية',
-            city: 'شبين الكوم',
-            phone: '01067890123',
-            department: 'الماء',
-            status: 'Completed',
-        },
-        {
-            id: 7,
-            title: 'توسعة شبكات الإنترنت في الأسكندرية',
-            description: 'عدم توفر الإنترنت بسرعة كافية في بعض الأحياء.',
-            governorate: 'الإسكندرية',
-            city: 'الإسكندرية',
-            phone: '01078901234',
-            department: 'الاتصالات',
-            status: 'On Hold',
-        },
-        {
-            id: 8,
-            title: 'شبكة الغاز في منطقة الجيزة',
-            description: 'عدم وصول الغاز الطبيعي لبعض المناطق الجديدة.',
-            governorate: 'الجيزة',
-            city: '6 أكتوبر',
-            phone: '01089012345',
-            department: 'الغاز',
-            status: 'Completed',
-        },
-        {
-            id: 9,
-            title: 'مشروع الكهرباء في العبور',
-            description: 'زيادة انقطاع الكهرباء بسبب الضغط الزائد على الشبكة.',
-            governorate: 'القليوبية',
-            city: 'العبور',
-            phone: '01090123456',
-            department: 'الكهرباء',
-            status: 'In Progress',
-        },
-        {
-            id: 10,
-            title: 'إمدادات المياه في القاهرة الجديدة',
-            description: 'ارتفاع منسوب المياه في بعض الأماكن بسبب مشاكل في الصرف.',
-            governorate: 'القاهرة',
-            city: 'القاهرة الجديدة',
-            phone: '01001234567',
-            department: 'الماء',
-            status: 'Completed',
-        },
-        {
-            id: 11,
-            title: 'توسعة شبكة الإنترنت في أسيوط',
-            description: 'الإنترنت غير مستقر في بعض الأحياء مما يسبب انقطاع الخدمة.',
-            governorate: 'أسيوط',
-            city: 'أسيوط',
-            phone: '01012345098',
-            department: 'الاتصالات',
-            status: 'On Hold',
-        },
-        {
-            id: 12,
-            title: 'إمدادات الغاز في منطقة المنيا',
-            description: 'عدم وجود شبكة غاز طبيعي في بعض الأحياء الجديدة.',
-            governorate: 'المنيا',
-            city: 'المنيا',
-            phone: '01023456198',
-            department: 'الغاز',
-            status: 'Completed',
-        },
-        {
-            id: 13,
-            title: 'تطوير الكهرباء في قنا',
-            description: 'العجز في تزويد الكهرباء للأحياء بسبب نقص المحولات.',
-            governorate: 'قنا',
-            city: 'قنا',
-            phone: '01034567234',
-            department: 'الكهرباء',
-            status: 'In Progress',
-        },
-        {
-            id: 14,
-            title: 'مشروع تحسين المياه في البحر الأحمر',
-            description: 'تلوث مياه الشرب في بعض المناطق بسبب ضعف الصرف الصحي.',
-            governorate: 'البحر الأحمر',
-            city: 'الغردقة',
-            phone: '01045678345',
-            department: 'الماء',
-            status: 'Completed',
-        },
-        {
-            id: 15,
-            title: 'توسيع الإنترنت في الجيزة',
-            description: 'الإنترنت بطيء وغير مستقر في بعض المناطق بسبب الضغط على الشبكة.',
-            governorate: 'الجيزة',
-            city: 'الشيخ زايد',
-            phone: '01056789456',
-            department: 'الاتصالات',
-            status: 'On Hold',
-        }
-    ];    
-    const filteredData = data.filter((item) => {
-        if(status === 'all') return true;
-        return item.status.toLowerCase() === status.toLowerCase();
+    const fetchData = async () => {
+        const res = await Axios.get(`/reports`)
+        return res.data
+    }
+
+    const {data , isLoading} = useQuery({
+        queryKey: ['reports'],
+        queryFn: fetchData,
+        staleTime: 1000 * 60
     })
+
+    // const filteredData = data.filter((item) => {
+    //     if(item.currentStatus === 'all') return true;
+    //     return item.status.toLowerCase() === status.toLowerCase();
+    // })
     return(
         <div>
             <div className="flex justify-between items-center">
@@ -199,7 +64,12 @@ export default function Reports(){
                 </div>
             </div>
             <div className="mt-10">
-                <Table headers={headers} data={filteredData} />
+                {isLoading ? 
+                    <>
+                        <Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={770} width="100%"/>
+                    </>
+                    : 
+                    <Table headers={headers} data={data} />}
             </div>
         </div>
     )

@@ -14,6 +14,7 @@ export default function DashNav(){
     const menu = useContext(Menu)
     const [logoutLoading, setLogoutLoading] = useState(false)
     const { user } = useAuth()
+    console.log(user);
     function toggleMenu(){
         menu.setIsOpen(!menu.isOpen)
     }

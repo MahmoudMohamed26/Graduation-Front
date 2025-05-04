@@ -1,4 +1,4 @@
-export default function WordCut(word , length){
+export default function wordCut(word , length){
     if(word.length > length){
         return word.slice(0,length) + '...'
     }else{

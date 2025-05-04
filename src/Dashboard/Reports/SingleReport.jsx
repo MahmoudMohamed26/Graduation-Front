@@ -1,7 +1,22 @@
 import { useParams } from "react-router-dom"
+import { Axios } from "../../API/Axios"
+import { useQuery } from "@tanstack/react-query"
+import Skeleton from "react-loading-skeleton"
 
 export default function SingleReport(){
     const {id} = useParams()
+
+    const fetchData = async () => {
+        const res = await Axios.get(`/reports/${id}`)
+        return res.data
+    }
+
+    const {data , isLoading} = useQuery({
+        queryKey: ['report', id],
+        queryFn: fetchData,
+        staleTime: 1000 * 60,
+    })
+    console.log(data);
     return(
         <div>
             <div className="flex">
@@ -9,9 +24,19 @@ export default function SingleReport(){
             </div>
             <div className="bg-white mt-10 px-2 text-right rounded-sm dark:border-[#363D3E] dark:bg-[#191A1A]">
                 <h2 className="text-2xl py-5 border-b border-[#f3f2f9] dark:border-[#363D3E] dark:bg-[#191A1A] dark:text-white">البيانات</h2>
-                <div className="py-5 text-sm dark:text-[#EEE]">
+                {isLoading ? <div className="mt-5">
+                    <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={160}/>
+                    <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={140}/>
+                    <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={280}/>
+                    <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={260}/>
+                    <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={400}/>
+                    <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={300}/>
+                    <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={260}/>
+                    <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={240}/>
+                    <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={530}/>
+                </div> : <div className="py-5 text-sm dark:text-[#EEE]">
                     <p className="mb-5">رقم البلاغ : <span className="text-[#666] dark:text-[#acabab]">{id}</span></p>
-                    <p className="mb-5">اسم القائم على البلاغ : <span className="text-[#666] dark:text-[#acabab]">محمود محمد</span></p>
+                    <p className="mb-5">اسم القائم على البلاغ : <span className="text-[#666] dark:text-[#acabab]">test</span></p>
                     <p className="mb-5">الرقم القومي للقائم على البلاغ : <span className="text-[#666] dark:text-[#acabab]">12345678901234</span></p>
                     <p className="mb-5">عنوان البلاغ : <span className="text-[#666] dark:text-[#acabab]">توسيع الإنترنت في الجيزة</span></p>
                     <p className="mb-5">وصف البلاغ : <span className="text-[#666] dark:text-[#acabab]">الإنترنت بطيء وغير مستقر في بعض المناطق بسبب الضغط على الشبكة</span></p>
@@ -20,7 +45,7 @@ export default function SingleReport(){
                     <p className="mb-5">القسم : <span className="text-[#666] dark:text-[#acabab]">الاتصالات</span></p>
                     <p className="mb-5">استلمها : <span className="text-[#666] dark:text-[#acabab]">23456789012345</span></p>
                     <p className="mb-5">الحالة : <span className="text-yellow-600">قيد التنفيذ</span></p>
-                </div>
+                </div>}
             </div>
         </div>
     )

@@ -1,4 +1,4 @@
-function GovernoratesMapper(arabicName) {
+export default function governoratesMapper(arabicName) {
     switch (arabicName.trim()) {
         case "القاهرة": return "Cairo";
         case "الجيزة": return "Giza";

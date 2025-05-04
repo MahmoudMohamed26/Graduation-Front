@@ -1,4 +1,4 @@
-export default function DepartmentMapper(department) {
+export default function departmentMapper(department) {
     switch (department) {
         case "Roads_and_Transportation_Department":
             return "الطرق والنقل";
