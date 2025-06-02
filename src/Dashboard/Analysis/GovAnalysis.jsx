@@ -2,7 +2,7 @@ import CurrentReports from "../Components/Analysis/CurrentReports";
 import Fastest from "../Components/Analysis/Fastest";
 import DepartReports from "../Components/Analysis/DepartReports";
 import Normalstats from "../Components/Analysis/Normalstats";
-import TopRated from "../Components/Analysis/TopRated";
+// import TopRated from "../Components/Analysis/TopRated";
 import { CiWarning, CiClock2 } from "react-icons/ci";
 import { GrUserWorker } from "react-icons/gr";
 
@@ -52,7 +52,7 @@ export default function GovAnalysis() {
             </div>
             <div className="lg:w-[270px] flex flex-col gap-3">
                 <div>
-                    <TopRated />
+                    <Fastest />
                 </div>
                 <div>
                     <Fastest />

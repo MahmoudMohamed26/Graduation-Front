@@ -2,10 +2,13 @@ import { useParams } from "react-router-dom"
 import { Axios } from "../../API/Axios"
 import { useQuery } from "@tanstack/react-query"
 import Skeleton from "react-loading-skeleton"
+import departmentMapper from "../../helpers/DepartmentMapper"
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet"
+import StatusMapper from "../../helpers/StatusMapper"
+import dateFormater from "../../helpers/DateFormater"
 
 export default function SingleReport(){
     const {id} = useParams()
-
     const fetchData = async () => {
         const res = await Axios.get(`/reports/${id}`)
         return res.data
@@ -16,6 +19,7 @@ export default function SingleReport(){
         queryFn: fetchData,
         staleTime: 1000 * 60,
     })
+    const { text: statusText, color: statusColor } = data ? StatusMapper(data.currentStatus) : { text: '', color: '' };
     console.log(data);
     return(
         <div>
@@ -35,18 +39,43 @@ export default function SingleReport(){
                     <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={240}/>
                     <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={530}/>
                 </div> : <div className="py-5 text-sm dark:text-[#EEE]">
-                    <p className="mb-5">رقم البلاغ : <span className="text-[#666] dark:text-[#acabab]">{id}</span></p>
-                    <p className="mb-5">اسم القائم على البلاغ : <span className="text-[#666] dark:text-[#acabab]">test</span></p>
-                    <p className="mb-5">الرقم القومي للقائم على البلاغ : <span className="text-[#666] dark:text-[#acabab]">12345678901234</span></p>
-                    <p className="mb-5">عنوان البلاغ : <span className="text-[#666] dark:text-[#acabab]">توسيع الإنترنت في الجيزة</span></p>
-                    <p className="mb-5">وصف البلاغ : <span className="text-[#666] dark:text-[#acabab]">الإنترنت بطيء وغير مستقر في بعض المناطق بسبب الضغط على الشبكة</span></p>
-                    <p className="mb-5">المحافظة : <span className="text-[#666] dark:text-[#acabab]">الجيزة</span></p>
-                    <p className="mb-5">المدينة : <span className="text-[#666] dark:text-[#acabab]">السادس من اكتوبر</span></p>
-                    <p className="mb-5">القسم : <span className="text-[#666] dark:text-[#acabab]">الاتصالات</span></p>
-                    <p className="mb-5">استلمها : <span className="text-[#666] dark:text-[#acabab]">23456789012345</span></p>
-                    <p className="mb-5">الحالة : <span className="text-yellow-600">قيد التنفيذ</span></p>
+                    <p className="mb-5">رقم الشكوى : <span className="text-[#666] dark:text-[#acabab]">{id}</span></p>
+                    <p className="mb-5">تم الانشاء في : <span className="text-[#666] dark:text-[#acabab]">{dateFormater(data.createdAt)}</span></p>
+                    <p className="mb-5">اخر تحديث في : <span className="text-[#666] dark:text-[#acabab]">{dateFormater(data.updatedAt)}</span></p>
+                    <p className="mb-5">اسم القائم على الشكوى : <span className="text-[#666] dark:text-[#acabab]">{data.citizenName}</span></p>
+                    <p className="mb-5">رقم الهاتف للقائم على الشكوى :<span className="text-[#666] dark:text-[#acabab]">{data.contactInfo}</span></p>
+                    <p className="mb-5">موضوع الشكوى : <span className="text-[#666] dark:text-[#acabab]">{data.title}</span></p>
+                    <p className="mb-5">وصف الشكوى : <span className="text-[#666] dark:text-[#acabab]">{data.description}</span></p>
+                    <p className="mb-5">المحافظة : <span className="text-[#666] dark:text-[#acabab]">{data.governorateName}</span></p>
+                    <p className="mb-5">المدينة : <span className="text-[#666] dark:text-[#acabab]">{data.cityName}</span></p>
+                    <p className="mb-5">القسم : <span className="text-[#666] dark:text-[#acabab]">{departmentMapper(data.department)}</span></p>
+                    <p className="mb-5">استلمها : <span className="text-[#666] dark:text-[#acabab]">{data.assignedEmployeeName}</span></p>
+                    <p className="mb-5">الحالة : <span style={{ color: statusColor }}>{statusText}</span></p>
                 </div>}
             </div>
+            <div className="bg-white mt-5 px-2 text-right rounded-sm dark:border-[#363D3E] dark:bg-[#191A1A]">
+                <h2 className="text-2xl py-5 border-b border-[#f3f2f9] dark:border-[#363D3E] dark:bg-[#191A1A] dark:text-white">مكان البلاغ</h2>
+                {isLoading ? <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mt-5 dark:[--highlight-color:_#444_!important]" height={424} width="100%"/> : <div className="mt-5 h-[400px] rounded-md overflow-hidden">
+                    <MapContainer
+                        center={[data.latitude, data.longitude]}
+                        zoom={13}
+                        style={{ height: "100%", width: "100%" }}
+                    >
+                        <TileLayer
+                            attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        <Marker position={[data.latitude, data.longitude]}>
+                            <Popup>
+                                <div className="text-sm">
+                                    <p>بلاغ: {data.title}</p>
+                                    <p>وصف: {data.description}</p>
+                                </div>
+                            </Popup>
+                        </Marker>
+                    </MapContainer>
+                </div>}
+                </div>
         </div>
     )
 }

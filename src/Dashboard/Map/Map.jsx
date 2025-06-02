@@ -6,6 +6,9 @@ import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 import { Axios } from '../../API/Axios';
 import Skeleton from 'react-loading-skeleton';
+import dateFormater from '../../helpers/DateFormater';
+import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
 // Fix default marker icon issues
 delete L.Icon.Default.prototype._getIconUrl;
@@ -92,8 +95,6 @@ const handleOverlayColor = (reportCount) => {
 
 const Map = () => {
   const [features, setFeatures] = useState([]);
-  const [reports, setReports] = useState([]);
-  const [load , setLoad] = useState(true)
   const [boundriesLoad , setBoundriesLoad] = useState(false)
 
   useEffect(() => {
@@ -180,20 +181,19 @@ const Map = () => {
       localStorage.setItem("geo-features-time", Date.now().toString());
     };
 
-    const fetchReports = async () => {
-      try {
-        setLoad(true)
-        const res = await Axios.get("/reports");
-        setReports(res.data);
-      } catch (err) {
-        console.error("Error fetching reports:", err);
-      }
-      setLoad(false)
-    }
-
     fetchGeoData();
-    fetchReports();
   }, []);
+
+  const fetchReports = async () => {
+        const res = await Axios.get(`/reports`)
+        return res.data
+      }
+    
+  const {data: reports , isLoading: load} = useQuery({
+        queryKey: ['reports'],
+        queryFn: fetchReports,
+        staleTime: 1000 * 60
+  })
 
   const onEachFeature = (feature, layer) => {
     const { name, reportCount } = feature.properties;
@@ -224,9 +224,10 @@ const Map = () => {
               icon={customMarker}
             >
               <Popup>
-                <strong>Report #{report.reportId}</strong><br />
-                {report.createdAt || "No city name"}<br />
-                {report.title || "No title"}
+                <p><strong>رقم الشكوى: </strong>{report.reportId}</p>
+                <p><strong>تاريخ الإنشاء: </strong>{dateFormater(report.createdAt) || "No city name"}</p>
+                <p><strong>موضوع الشكوى: </strong>{report.title || "No title"}</p>
+                <Link to={`/dashboard/reports/${report.reportId}`} className='text-blue-500 block mt-3 hover:underline'>عرض التفاصيل</Link>
               </Popup>
             </Marker>
           )

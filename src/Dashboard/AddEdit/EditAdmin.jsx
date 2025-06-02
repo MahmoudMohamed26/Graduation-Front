@@ -14,6 +14,7 @@ export default function EditAdmin() {
     const [govs, setGovs] = useState([]);
     const [load , setLoad] = useState(true)
     const [data , setData] = useState([])
+    console.log(data);
     const [cityLoad , setCityLoad] = useState(true)
     const [btnLoad , setBtnLoad] = useState(false)
     const { id } = useParams();

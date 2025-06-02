@@ -2,9 +2,9 @@
 import Table from "../Components/Table"
 import { Axios } from "../../API/Axios";
 import Skeleton from "react-loading-skeleton";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 export default function CityAdmins(){
-
+    const queryClient = useQueryClient()
     const fetchData = async () => {
         const res = await Axios.get(`/cityadmins`)
         return res.data
@@ -15,7 +15,7 @@ export default function CityAdmins(){
         queryFn: fetchData,
         staleTime: 1000 * 60,
     })
-
+    console.log(data);
     const headers = [{
         name: 'الأسم',
         key: 'fullName',
@@ -30,7 +30,13 @@ export default function CityAdmins(){
         key: 'cityName',
     }]
 
-
+    const handleDelete = (removeId, type) => {
+        // Update the React Query cache immediately
+        queryClient.setQueryData(['cityAdmins'], (oldData) => {
+            if (!oldData) return oldData
+            return oldData.filter((item) => item.adminId !== removeId)
+        })
+    }
     
     return(
         <div>
@@ -43,7 +49,7 @@ export default function CityAdmins(){
                 <Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={770} width="100%"/>
                 </>
                 : 
-                <Table headers={headers} type="admins" url={"admins"} data={data} />}
+                <Table headers={headers} type="admins" url={"admins"} data={data} onDelete={handleDelete} />}
             </div>
         </div>
     )

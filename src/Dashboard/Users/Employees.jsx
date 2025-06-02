@@ -1,8 +1,11 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Axios } from "../../API/Axios"
 import Table from "../Components/Table"
 import Skeleton from "react-loading-skeleton"
+
 export default function Employees(){
+    const queryClient = useQueryClient()
+    
     const headers = [{
         name: 'الأسم',
         key: 'fullName',
@@ -28,11 +31,19 @@ export default function Employees(){
         return res.data
     }
 
-    const {data , isLoading} = useQuery({
+    const {data, isLoading} = useQuery({
         queryKey: ['employees'],
         queryFn: fetchData,
         staleTime: 1000 * 60,
     })
+
+    const handleDelete = (removeId, type) => {
+        // Update the React Query cache immediately
+        queryClient.setQueryData(['employees'], (oldData) => {
+            if (!oldData) return oldData
+            return oldData.filter((item) => item.empId !== removeId)
+        })
+    }
 
     return(
         <div>
@@ -45,7 +56,7 @@ export default function Employees(){
                 <Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={770} width="100%"/>
                 </>
                 : 
-                <Table headers={headers} type="employees" url={"employees"} data={data} />}
+                <Table headers={headers} type="employees" url={"employees"} data={data || []} onDelete={handleDelete} />}
             </div>
         </div>
     )

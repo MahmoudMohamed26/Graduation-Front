@@ -1,8 +1,10 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Axios } from "../../API/Axios"
+
 import Table from "../Components/Table"
 import Skeleton from "react-loading-skeleton"
 export default function GovAdmins(){
+    const queryClient = useQueryClient()
     const headers = [{
         name: 'الأسم',
         key: 'fullName',
@@ -24,6 +26,14 @@ export default function GovAdmins(){
         queryFn: fetchData,
         staleTime: 1000 * 60,
     })
+
+    const handleDelete = (removeId, type) => {
+        // Update the React Query cache immediately
+        queryClient.setQueryData(['governorateAdmins'], (oldData) => {
+            if (!oldData) return oldData
+            return oldData.filter((item) => item.adminId !== removeId)
+        })
+    }
     
     return(
         <div>
@@ -36,7 +46,7 @@ export default function GovAdmins(){
                 <Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={770} width="100%"/>
                 </>
                 :
-                <Table headers={headers} type="admins" url={"admins"} data={data} />}
+                <Table headers={headers} type="admins" url={"admins"} data={data} onDelete={handleDelete} />}
 
             </div>
         </div>

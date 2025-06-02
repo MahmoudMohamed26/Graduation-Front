@@ -8,10 +8,11 @@ import departmentMapper from "../../helpers/DepartmentMapper";
 import dateFormater from "../../helpers/DateFormater";
 import { Axios } from "../../API/Axios";
 import { Bounce, toast } from "react-toastify";
+import StatusMapper from "../../helpers/StatusMapper";
 export default function Table(props){
     const url = window.location.pathname.split("/")[window.location.pathname.split("/").length-1]
     const [showpop, setShowpop] = useState(false)
-    const [data , setData] = useState(props.data)
+    // const [data , setData] = useState(props.data)
     const [ removeId , setRemoveId] = useState(null)
     const [ removeType , setRemoveType] = useState(null)
     const [ lastDelete , setLastDelete] = useState(false)
@@ -36,9 +37,12 @@ export default function Table(props){
                 theme: document.documentElement.classList.contains("dark") ? "dark" : "light",
                 transition: Bounce,
                 });
-                setData((old) => {
-                    return old.filter((item) => props.type === "employees" ? item.empId !== removeId : item.adminId !== removeId)
-                })
+                // setData((old) => {
+                //     return old.filter((item) => props.type === "employees" ? item.empId !== removeId : item.adminId !== removeId)
+                // })
+                if(props.onDelete) {
+                    props.onDelete(removeId, removeType);
+                }
         }catch(err){
             console.log(err);
             toast.error('حدث خطأ اثناء التنفيذ', {
@@ -61,13 +65,34 @@ export default function Table(props){
     {element.name}
     </th>
     ))
-    const dataShow = data.map((item , index) => (
+    const dataShow = props.data.map((item , index) => (
         <tr className="hover:bg-gray-200 dark:bg-[#1D1F20] dark:hover:bg-[#191A1A] dark:odd:bg-[#191A1A] bg-[#F4F7FA] duration-300 odd:bg-gray-200" key={index}>
         <td className="p-4 text-[15px] dark:text-white text-gray-800 ">{index + 1}</td>
         {props.headers.map((item2, index2) => (
             <td key={index2} className="p-4 text-sm dark:text-[#EEE] text-gray-800">
-            {item2.key === 'status' ? (item[item2.key] === 'Completed' ? <span className="px-2 py-1 bg-green-200 text-green-800 rounded-md">مكتمل</span> : item[item2.key] === 'On Hold' ? <span className="px-2 py-1 bg-red-200 text-red-800 rounded-md">معلق</span> : <span className="px-2 py-1 bg-yellow-200 text-yellow-800 rounded-md">قيد التنفيذ</span>) : item2.key === 'department' ? wordCut(departmentMapper(item[item2.key]) , 15) : item2.key === 'createdAt' ? dateFormater(item[item2.key]) : wordCut(item[item2.key], 30)}
-            </td>
+  {item2.key === 'currentStatus'
+    ? (() => {
+        const { text: statusText, color: statusColor, bgColor: statusBgColor } = StatusMapper(item[item2.key]);
+        return (
+          <span
+            style={{
+              color: statusColor,
+              backgroundColor: statusBgColor,
+              padding: '2px 6px',
+              borderRadius: '4px'
+            }}
+          >
+            {statusText}
+          </span>
+        );
+      })()
+    : item2.key === 'department'
+    ? wordCut(departmentMapper(item[item2.key]), 15)
+    : item2.key === 'createdAt'
+    ? dateFormater(item[item2.key])
+    : wordCut(item[item2.key], 30)
+  }
+</td>
         ))}
         
             {url === 'reports' ? (<td className="py-4 flex justify-center"><Link to={`${item.reportId}`}><FaRegEye className="cursor-pointer !hover:text-[#604CC7]" color="#725DFE" size={20} /></Link></td>) : (<td><Link to={`${props.url === "admins" ? item.adminId : item.empId}`}>

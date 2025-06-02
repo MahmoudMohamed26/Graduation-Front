@@ -3,12 +3,12 @@ import { GrUserWorker } from "react-icons/gr";
 import { PiCity } from "react-icons/pi";
 import { RiGovernmentLine } from "react-icons/ri";
 import { IoPersonAddOutline } from "react-icons/io5";
-import { RiAdminLine } from "react-icons/ri";
+import { FaShieldHalved } from "react-icons/fa6";
 import { TbHomeStats } from "react-icons/tb";
 import { FiMapPin } from "react-icons/fi";
 import { MdOutlineReportProblem } from "react-icons/md";
 import { IoSettingsOutline } from "react-icons/io5";
-
+import { ImStatsDots } from "react-icons/im";
 
 const categories =[{
     name: 'الرئيسية'
@@ -26,7 +26,7 @@ const Elements = [{
     name: 'اضافة مشرف',
     category: 'الأضافه',
     to: '/dashboard/add-admin',
-    icon: <RiAdminLine size={20} />
+    icon: <FaShieldHalved size={20} />
 } , {
     name: 'اضافة موظف',
     category: 'الأضافه',
@@ -56,7 +56,7 @@ const Elements = [{
     name: 'احصائيات المحافظه',
     category: 'الرئيسية',
     to: '/dashboard/governorate-data',
-    icon: <TbHomeStats size={20} />
+    icon: <ImStatsDots size={20} />
 }, {
     name: 'الشكاوي',
     category: 'الرئيسية',
