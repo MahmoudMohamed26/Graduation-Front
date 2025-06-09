@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import { AiOutlineEye } from "react-icons/ai";
@@ -10,6 +10,11 @@ import { Bounce, toast, ToastContainer } from "react-toastify";
 import { Axios } from "../API/Axios";
 
 export default function SignIn() {
+
+    useEffect(() => {
+            document.title = "CivicEye | تسجيل الدخول";
+        } , [])
+
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [showpass , setShowPass] = useState(false);

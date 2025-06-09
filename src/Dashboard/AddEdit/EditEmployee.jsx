@@ -11,6 +11,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
 export default function AddEmployee() {
+
+	useEffect(() => {
+        document.title = "CivicEye | تعديل موظف";
+    } , [])
+
 	const [cities, setCities] = useState([]);
 	const [cityLoad, setCityLoad] = useState(false);
 	const [btnLoad, setBtnLoad] = useState(false);
@@ -116,7 +121,7 @@ export default function AddEmployee() {
 				const { governorateId, ...filteredValues } = values;
 				setBtnLoad(true);
 				try {
-					const res = await Axios.post("/employees", filteredValues);
+					const res = await Axios.put(`/employees/${id}`, filteredValues);
 					setBtnLoad(false);
 					console.log(res);
 					console.log(values);
@@ -186,7 +191,7 @@ export default function AddEmployee() {
 							<Input label="الأسم الأخير:" name="lastName" formik={form} placeholder='ادخل الأسم' />
 						</div>
 						<div className="flex flex-col lg:flex-row lg:gap-5">
-							<Input label="البريد الألكتروني:" name="email" formik={form} placeholder='ادخل الرقم' />
+							<Input label="البريد الألكتروني:" name="email" formik={form} placeholder='ادخل البريد الألكتروني' />
 							<Input label="الرقم القومي:" name="nationalId" formik={form} placeholder='ادخل الرقم' />
 							<Input label="كلمة السر:" name="password" formik={form} placeholder='************' password={true} />
 						</div>
@@ -204,7 +209,7 @@ export default function AddEmployee() {
 											<option key={index} value={gov.governorateId}>{gov.name}</option>
 										))}
 									</select>
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700 dark:text-white">
 										<path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
 									</svg>
 								</div>
@@ -228,7 +233,7 @@ export default function AddEmployee() {
 												<option key={index} value={city.cityId}>{city.name}</option>
 											))}
 										</select>
-										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700">
+										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700 dark:text-white">
 											<path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
 										</svg>
 									</div>
@@ -251,7 +256,7 @@ export default function AddEmployee() {
 										<option key={index} value={department}>{DepartmentMapper(department)}</option>
 									))}
 								</select>
-								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700 dark:text-white">
 									<path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
 								</svg>
 							</div>

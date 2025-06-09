@@ -18,6 +18,7 @@ export default function Input({ label, name, disabled, formik, optional, placeho
                     }`}
                     placeholder={placeholder}
                     name={name}
+                    maxLength={name === "nationalId" ? 14 : name === "email" ? 30 : 20}
                     value={formik.values[name]}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}

@@ -1,6 +1,6 @@
 import Input from "../Components/Input";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { Bounce } from "react-toastify";
@@ -8,7 +8,12 @@ import Skeleton from "react-loading-skeleton";
 import { Axios } from "../../API/Axios";
 import DepartmentMapper from "../../helpers/DepartmentMapper";
 import { useQuery } from "@tanstack/react-query";
+
 export default function AddEmployee() {
+
+	useEffect(() => {
+					document.title = "CivicEye | اضافة موظف";
+			} , [])
 
 	const [cities, setCities] = useState([]);
 	const [cityLoad , setCityLoad] = useState(true)
@@ -148,7 +153,7 @@ export default function AddEmployee() {
 											<Input label="الأسم الأخير:" name="lastName" formik={form} placeholder='ادخل الأسم' />
 									</div>
 									<div className="flex flex-col lg:flex-row lg:gap-5">
-											<Input label="البريد الألكتروني:" name="email" formik={form} placeholder='ادخل الرقم' />
+											<Input label="البريد الألكتروني:" name="email" formik={form} placeholder='ادخل البريد الألكتروني' />
 											<Input label="الرقم القومي:" name="nationalId" formik={form} placeholder='ادخل الرقم' />
 											<Input label="كلمة السر:" name="password" formik={form} placeholder='************' password={true} />
 									</div>
@@ -166,7 +171,7 @@ export default function AddEmployee() {
 																			<option key={index} value={gov.governorateId}>{gov.name}</option>
 																	))}
 															</select>
-															<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700">
+															<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700 dark:text-white">
 															<path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
 															</svg>
 													</div>
@@ -190,7 +195,7 @@ export default function AddEmployee() {
 																					<option key={index} value={city.cityId}>{city.name}</option>
 																			))}
 																	</select>
-																	<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700">
+																	<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700 dark:text-white">
 																	<path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
 																	</svg>
 															</div>
@@ -209,11 +214,11 @@ export default function AddEmployee() {
 															value={form.values.department}
 															className={`w-full border text-right duration-300  text-sm border-[#e2e6f1] dark:bg-[#121313] dark:text-white dark:border-[#333] rounded-md outline-none p-2 my-2  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none cursor-pointer ${form.errors.department && form.touched.department ? '!border-red-500' : 'special_shadow'}`}>
 															<option disabled value="">اختر القسم</option>
-															{departments.map((department , index) => (
+															{departments?.map((department , index) => (
 																	<option key={index} value={department}>{DepartmentMapper(department)}</option>
 															))}
 													</select>
-													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700">
+													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700 dark:text-white">
 													<path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
 													</svg>
 											</div>

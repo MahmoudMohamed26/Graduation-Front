@@ -9,6 +9,11 @@ import Skeleton from "react-loading-skeleton";
 import { Axios } from "../../API/Axios";
 
 export default function EditAdmin() {
+
+    useEffect(() => {
+        document.title = "CivicEye | تعديل مشرف";
+    } , [])
+
     const url = window.location.href.split('/')[window.location.href.split('/').length - 2]
     const [cities, setCities] = useState([]);
     const [govs, setGovs] = useState([]);
@@ -156,7 +161,7 @@ export default function EditAdmin() {
                         <Input label="الأسم الأخير:" name="lastName" formik={form} placeholder='ادخل الأسم' />
                     </div>
                     <div className="flex flex-col lg:flex-row lg:gap-5">
-                        <Input label="البريد الألكتروني:" name="email" disabled={true} formik={form} placeholder='ادخل الرقم' />
+                        <Input label="البريد الألكتروني:" name="email" disabled={true} formik={form} placeholder='ادخل البريد الألكتروني' />
                         <Input label="الرقم القومي:" name="nationalId" disabled={true} formik={form} placeholder='ادخل الرقم' />
                         <Input label="كلمة السر" name="hashPassword" optional={true} formik={form} placeholder='************' password={true} />
                     </div>
@@ -173,7 +178,7 @@ export default function EditAdmin() {
                                         {form.values.type === 1999 ? <option value="1999">مشرف محافظة</option>
                                         : <option value="1998">مشرف مدينة</option>}
                                     </select>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700 dark:text-white">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
                                     </svg>
                                 </div>
@@ -196,7 +201,7 @@ export default function EditAdmin() {
                                             <option key={index} value={gov.governorateId}>{gov.name}</option>
                                         ))}
                                     </select>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700 dark:text-white">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
                                     </svg>
                                 </div>
@@ -220,7 +225,7 @@ export default function EditAdmin() {
                                             <option key={index} value={city.cityId}>{city.name}</option>
                                         ))}
                                     </select>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700 dark:text-white">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
                                     </svg>
                                 </div>

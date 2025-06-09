@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -9,6 +9,7 @@ import Skeleton from 'react-loading-skeleton';
 import dateFormater from '../../helpers/DateFormater';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { AuthContext } from '../../Context/AuthContext';
 
 // Fix default marker icon issues
 delete L.Icon.Default.prototype._getIconUrl;
@@ -95,14 +96,43 @@ const handleOverlayColor = (reportCount) => {
 
 const Map = () => {
   const [features, setFeatures] = useState([]);
-  const [boundriesLoad , setBoundriesLoad] = useState(false)
+  const [boundriesLoad , setBoundriesLoad] = useState(false);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-
+    document.title = "CivicEye | الخريطة";
 
     const fetchGeoData = async () => {
-      const cachedData = localStorage.getItem("geo-features");
-      const cacheTime = localStorage.getItem("geo-features-time");
+      // Determine which governorates to fetch based on user
+      let governoratesToFetch = governorates;
+      
+      if (user?.governorateName) {
+        // Convert Arabic governorate name to English if needed
+        const englishGovName = governorateNameMap[user.governorateName] || user.governorateName;
+        const governorateId = governorates[englishGovName];
+        
+        if (governorateId) {
+          governoratesToFetch = { [englishGovName]: governorateId };
+        } else {
+          console.warn(`Governorate not found: ${user.governorateName} (${englishGovName})`);
+          governoratesToFetch = governorates; // Fallback to all governorates
+        }
+      }
+
+      // Create cache key based on user's governorate (use English name for consistency)
+      const englishGovForCache = user?.governorateName 
+        ? (governorateNameMap[user.governorateName] || user.governorateName)
+        : null;
+      
+      const cacheKey = englishGovForCache 
+        ? `geo-features-${englishGovForCache}`
+        : "geo-features";
+      const cacheTimeKey = englishGovForCache 
+        ? `geo-features-time-${englishGovForCache}`
+        : "geo-features-time";
+
+      const cachedData = localStorage.getItem(cacheKey);
+      const cacheTime = localStorage.getItem(cacheTimeKey);
       const cacheValid = cachedData && cacheTime && (Date.now() - Number(cacheTime) < 24 * 60 * 60 * 1000);
 
       let dynamicCounts = {};
@@ -138,8 +168,9 @@ const Map = () => {
       }
 
       const fetchedFeatures = [];
-      // Promise.all
-      for (const [name, id] of Object.entries(governorates)) {
+      
+      // Fetch only the required governorates
+      for (const [name, id] of Object.entries(governoratesToFetch)) {
         const query = `
           [out:json];
           relation(${id});
@@ -149,7 +180,7 @@ const Map = () => {
         `;
 
         try {
-          setBoundriesLoad(true)
+          setBoundriesLoad(true);
           const res = await fetch('https://overpass-api.de/api/interpreter', {
             method: 'POST',
             body: query,
@@ -158,7 +189,8 @@ const Map = () => {
           const data = await res.json();
           const osmtogeojson = await import('osmtogeojson');
           const geojson = osmtogeojson.default(data);
-          setBoundriesLoad(false)
+          setBoundriesLoad(false);
+          
           // Filter to only include polygon features
           const polygonFeatures = geojson.features.filter(f => 
             f.geometry.type === 'Polygon' || 
@@ -177,23 +209,48 @@ const Map = () => {
       }
 
       setFeatures(fetchedFeatures);
-      localStorage.setItem("geo-features", JSON.stringify(fetchedFeatures));
-      localStorage.setItem("geo-features-time", Date.now().toString());
+      localStorage.setItem(cacheKey, JSON.stringify(fetchedFeatures));
+      localStorage.setItem(cacheTimeKey, Date.now().toString());
     };
 
     fetchGeoData();
-  }, []);
+  }, [user?.governorateName]); // Re-run when user's governorate changes
 
   const fetchReports = async () => {
-        const res = await Axios.get(`/reports`)
-        return res.data
-      }
+    const res = await Axios.get(`/reports/allReports`);
+    return res.data;
+  };
     
-  const {data: reports , isLoading: load} = useQuery({
-        queryKey: ['reports'],
-        queryFn: fetchReports,
-        staleTime: 1000 * 60
-  })
+  const { data: allReports, isLoading: load } = useQuery({
+    queryKey: ['allReports'],
+    queryFn: fetchReports,
+    staleTime: 1000 * 60
+  });
+
+  // Filter reports based on user's city and governorate
+  const filteredReports = React.useMemo(() => {
+    if (!allReports) return [];
+    
+    // If no user or no location restrictions, return all reports
+    if (!user || (!user.cityName && !user.governorateName)) {
+      return allReports;
+    }
+
+    return allReports.filter(report => {
+      // If user has cityName, filter by city
+      if (user.cityName) {
+        return report.cityName === user.cityName;
+      }
+      
+      // If user has governorateName but no cityName, filter by governorate
+      if (user.governorateName) {
+        return report.governorateName === user.governorateName;
+      }
+      
+      return true;
+    });
+    // eslint-disable-next-line
+  }, [allReports, user?.cityName, user?.governorateName]);
 
   const onEachFeature = (feature, layer) => {
     const { name, reportCount } = feature.properties;
@@ -205,9 +262,9 @@ const Map = () => {
 
   return (
     load || boundriesLoad ? <>
-            <Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={850} width="100%"/>
-          </> 
-          : <div className='relative z-10'>
+      <Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={850} width="100%"/>
+    </> 
+    : <div className='relative z-10'>
         <MapContainer className='outline-none' center={[29.8206, 30.8025]} zoom={8} style={{ height: 'calc(100vh - 114px)', width: '100%' }}>
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a> & OpenStreetMap contributors'
@@ -215,8 +272,8 @@ const Map = () => {
           noWrap={true}
         />
 
-        {/* Dynamic Report Markers */}
-        {reports.map((report , index) => (
+        {/* Dynamic Report Markers - Now filtered */}
+        {filteredReports.map((report, index) => (
           report.latitude && report.longitude && (
             <Marker 
               key={`report-${report.reportId || index}`} 

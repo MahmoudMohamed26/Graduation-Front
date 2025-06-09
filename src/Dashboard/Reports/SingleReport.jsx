@@ -6,12 +6,25 @@ import departmentMapper from "../../helpers/DepartmentMapper"
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet"
 import StatusMapper from "../../helpers/StatusMapper"
 import dateFormater from "../../helpers/DateFormater"
+import { useEffect, useState } from "react"
 
 export default function SingleReport(){
+
+    const [error, setError] = useState('')
+    useEffect(() => {
+            document.title = "CivicEye | الشكاوي";
+        } , [])
+
     const {id} = useParams()
     const fetchData = async () => {
-        const res = await Axios.get(`/reports/${id}`)
-        return res.data
+        try{
+            const res = await Axios.get(`/reports/${id}`)
+            return res.data
+        }
+        catch(err){
+            console.log(err);
+            setError('لم يتعم العثور على البلاغ')
+        }
     }
 
     const {data , isLoading} = useQuery({
@@ -38,7 +51,7 @@ export default function SingleReport(){
                     <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={260}/>
                     <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={240}/>
                     <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mb-5 dark:[--highlight-color:_#444_!important]" height={20} width={530}/>
-                </div> : <div className="py-5 text-sm dark:text-[#EEE]">
+                </div> : !error ? <div className="py-5 text-sm dark:text-[#EEE]">
                     <p className="mb-5">رقم الشكوى : <span className="text-[#666] dark:text-[#acabab]">{id}</span></p>
                     <p className="mb-5">تم الانشاء في : <span className="text-[#666] dark:text-[#acabab]">{dateFormater(data.createdAt)}</span></p>
                     <p className="mb-5">اخر تحديث في : <span className="text-[#666] dark:text-[#acabab]">{dateFormater(data.updatedAt)}</span></p>
@@ -51,9 +64,9 @@ export default function SingleReport(){
                     <p className="mb-5">القسم : <span className="text-[#666] dark:text-[#acabab]">{departmentMapper(data.department)}</span></p>
                     <p className="mb-5">استلمها : <span className="text-[#666] dark:text-[#acabab]">{data.assignedEmployeeName}</span></p>
                     <p className="mb-5">الحالة : <span style={{ color: statusColor }}>{statusText}</span></p>
-                </div>}
+                </div> : <p className="py-4 text-sm">لم يتم العثور على البلاغ</p>}
             </div>
-            <div className="bg-white mt-5 px-2 text-right rounded-sm dark:border-[#363D3E] dark:bg-[#191A1A]">
+            {!error && <div className="bg-white mt-5 px-2 text-right rounded-sm dark:border-[#363D3E] dark:bg-[#191A1A]">
                 <h2 className="text-2xl py-5 border-b border-[#f3f2f9] dark:border-[#363D3E] dark:bg-[#191A1A] dark:text-white">مكان البلاغ</h2>
                 {isLoading ? <Skeleton count={1} className="dark:[--base-color:_#202020_!important] mt-5 dark:[--highlight-color:_#444_!important]" height={424} width="100%"/> : <div className="mt-5 h-[400px] rounded-md overflow-hidden">
                     <MapContainer
@@ -75,7 +88,7 @@ export default function SingleReport(){
                         </Marker>
                     </MapContainer>
                 </div>}
-                </div>
+                </div>}
         </div>
     )
 }

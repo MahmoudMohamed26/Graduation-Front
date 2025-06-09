@@ -1,6 +1,6 @@
 import Input from "../Components/Input";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { Bounce } from "react-toastify";
@@ -8,6 +8,10 @@ import Skeleton from "react-loading-skeleton";
 import { Axios } from "../../API/Axios";
 import { useQuery } from "@tanstack/react-query";
 export default function AddAdmin() {
+
+    useEffect(() => {
+            document.title = "CivicEye | اضافة مشرف";
+        } , [])
 
     const [cities, setCities] = useState([]);
     const [cityLoad , setCityLoad] = useState(true)
@@ -140,7 +144,7 @@ export default function AddAdmin() {
                         <Input label="الأسم الأخير:" name="lastName" formik={form} placeholder='ادخل الأسم' />
                     </div>
                     <div className="flex flex-col lg:flex-row lg:gap-5">
-                        <Input label="البريد الألكتروني:" name="email" formik={form} placeholder='ادخل الرقم' />
+                        <Input label="البريد الألكتروني:" name="email" formik={form} placeholder='ادخل البريد الألكتروني' />
                         <Input label="الرقم القومي:" name="nationalId" formik={form} placeholder='ادخل الرقم' />
                         <Input label="كلمة السر:" name="hashPassword" formik={form} placeholder='************' password={true} />
                     </div>
@@ -157,7 +161,7 @@ export default function AddAdmin() {
                                         <option value="1999">مشرف محافظة</option>
                                         <option value="1998">مشرف مدينة</option>
                                     </select>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700 dark:text-white">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
                                     </svg>
                                 </div>
@@ -180,7 +184,7 @@ export default function AddAdmin() {
                                             <option key={index} value={gov.governorateId}>{gov.name}</option>
                                         ))}
                                     </select>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700 dark:text-white">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
                                     </svg>
                                 </div>
@@ -204,7 +208,7 @@ export default function AddAdmin() {
                                             <option key={index} value={city.cityId}>{city.name}</option>
                                         ))}
                                     </select>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute translate-y-1/2 top-1/2 left-2.5 text-slate-700 dark:text-white">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
                                     </svg>
                                 </div>

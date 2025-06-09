@@ -1,12 +1,19 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Menu } from "../Context/MenuContext";
 import DashNav from "./Components/DashNav";
 import DashSide from "./Components/DashSide";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 export default function Dashboard(){
     const menu = useContext(Menu)
+
+    const location = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location.pathname]);
+
     return(
         <>
             <ToastContainer />
