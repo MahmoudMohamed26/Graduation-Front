@@ -1,6 +1,6 @@
 import Input from "../Components/Input";
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { Bounce } from "react-toastify";
@@ -9,6 +9,7 @@ import { Axios } from "../../API/Axios";
 import DepartmentMapper from "../../helpers/DepartmentMapper";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { AuthContext } from "../../Context/AuthContext";
 
 export default function AddEmployee() {
 
@@ -19,6 +20,8 @@ export default function AddEmployee() {
 	const [cities, setCities] = useState([]);
 	const [cityLoad, setCityLoad] = useState(false);
 	const [btnLoad, setBtnLoad] = useState(false);
+	const [error, setError] = useState('')
+	const { user } = useContext(AuthContext);
 	const [cityFirstLoad, setCityFirstLoad] = useState(true);
 	const { id } = useParams();
 
@@ -28,8 +31,12 @@ export default function AddEmployee() {
 	};
 
 	const fetchData = async () => {
-		const res = await Axios.get(`/employees/${id}`);
-		return res.data;
+		try{
+			const res = await Axios.get(`/employees/${id}`);
+			return res.data;
+		}catch(err){
+      setError('لم يتعم العثور على البلاغ')
+		}
 	};
 
 	const { data, isLoading: load } = useQuery({
@@ -177,11 +184,11 @@ export default function AddEmployee() {
 					تعديل موظف
 				</h1>
 			</div>
-			{load || cityFirstLoad ? (
+			{((load || cityFirstLoad) && !error) ? (
 				<div className="mt-10">
 					<Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={431} width="100%" />
 				</div>
-			) : (
+			) : !error ? (
 				<div className="bg-white mt-10 px-2 text-right rounded-sm dark:border-[#363D3E] dark:bg-[#191A1A]">
 					<h2 className="text-2xl py-5 border-b border-[#f3f2f9] dark:border-[#363D3E] dark:bg-[#191A1A] dark:text-white">البيانات</h2>
 					
@@ -202,6 +209,7 @@ export default function AddEmployee() {
 										name="governorateId"
 										onChange={(e) => { GetCities(e.target.value); form.handleChange(e); }}
 										onBlur={form.handleBlur}
+										disabled={user?.governorateId}
 										value={form.values.governorateId}
 										className={`w-full border text-right duration-300 text-sm border-[#e2e6f1] dark:bg-[#121313] dark:text-white dark:border-[#333] rounded-md outline-none p-2 my-2 pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none cursor-pointer ${form.errors.governorateId && form.touched.governorateId ? '!border-red-500' : 'special_shadow'}`}>
 										<option disabled value="">اختر المحافظة</option>
@@ -222,7 +230,7 @@ export default function AddEmployee() {
 								<div className="relative flex-1">
 									<div className="relative">
 										<select
-											disabled={cityLoad}
+											disabled={cityLoad || user?.cityId}
 											name="cityId"
 											onChange={form.handleChange}
 											onBlur={form.handleBlur}
@@ -279,7 +287,10 @@ export default function AddEmployee() {
 						</div>
 					</form>
 				</div>
-			)}
+			) : <div className="bg-white mt-10 px-2 text-right rounded-sm dark:border-[#363D3E] dark:bg-[#191A1A]">
+            <h2 className="text-2xl py-5 border-b border-[#f3f2f9] dark:border-[#363D3E] dark:bg-[#191A1A] dark:text-white">البيانات</h2>
+            <p className="py-4 text-sm dark:text-white">لم يتم العثور على الموظف</p>
+          </div>}
 		</div>
 	);
 }

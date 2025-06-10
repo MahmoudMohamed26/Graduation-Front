@@ -1,6 +1,6 @@
 import Input from "../Components/Input";
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { Bounce } from "react-toastify";
@@ -8,6 +8,7 @@ import Skeleton from "react-loading-skeleton";
 import { Axios } from "../../API/Axios";
 import DepartmentMapper from "../../helpers/DepartmentMapper";
 import { useQuery } from "@tanstack/react-query";
+import { AuthContext } from "../../Context/AuthContext";
 
 export default function AddEmployee() {
 
@@ -18,11 +19,27 @@ export default function AddEmployee() {
 	const [cities, setCities] = useState([]);
 	const [cityLoad , setCityLoad] = useState(true)
 	const [btnLoad , setBtnLoad] = useState(false)
+	const { user } = useContext(AuthContext)
 	
 	const fetchGovs = async () => {
 		const res = await Axios.get(`/governorates`)
 		return res.data
 	}
+
+	useEffect(() => {
+		if(user?.cityId){
+			setCityLoad(true);
+			Axios.get(`/cities/${user?.governorateId}`)
+				.then((response) => {
+					setCities(response.data);
+					setCityLoad(false);
+				})
+				.catch((error) => {
+					console.error("Error fetching cities:", error);
+					setCityLoad(false);
+				});
+		}
+	} , [user?.cityId , user?.governorateId])
 
 	const fetchDepart = async () => {
 		const res = await Axios.get(`/departments`)
@@ -162,9 +179,10 @@ export default function AddEmployee() {
 													<div className="relative">
 															<select
 																	name="governorateId"
+																	disabled={user?.governorateId}
 																	onChange={(e) => { GetCities(e.target.value); form.handleChange(e);}}
 																	onBlur={form.handleBlur}
-																	value={form.values.governorateId}
+																	value={user?.governorateId || form.values.governorateId}
 																	className={`w-full border text-right duration-300  text-sm border-[#e2e6f1] dark:bg-[#121313] dark:text-white dark:border-[#333] rounded-md outline-none p-2 my-2  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none cursor-pointer ${form.errors.governorateId && form.touched.governorateId ? '!border-red-500' : 'special_shadow'}`}>
 																	<option disabled value="">اختر المحافظة</option>
 																	{govs.map((gov , index) => (
@@ -180,15 +198,15 @@ export default function AddEmployee() {
 													)}
 											</div>
 											
-											{form.values.governorateId  && (
+											{(form.values.governorateId || user?.cityId) && (
 													<div className="relative flex-1">
 															<div className="relative">
 																	<select
-																	disabled={cityLoad}
+																	disabled={cityLoad || user?.cityId}
 																			name="cityId"
 																			onChange={form.handleChange}
 																			onBlur={form.handleBlur}
-																			value={form.values.cityId}
+																			value={user?.cityId || form.values.cityId}
 																			className={`w-full border text-right duration-300  text-sm border-[#e2e6f1] dark:bg-[#121313] dark:text-white dark:border-[#333] rounded-md outline-none p-2 my-2  pl-8 pr-3 py-2 transition ease focus:outline-none shadow-sm appearance-none ${cityLoad ? "" : "cursor-pointer"} ${form.errors.cityId && form.touched.cityId ? '!border-red-500' : 'special_shadow'}`}>
 																			<option disabled value=''>{cityLoad ? "جاري تحميل المدن..." : "اختر المدينة"}</option>
 																			{cities.map((city , index) => (

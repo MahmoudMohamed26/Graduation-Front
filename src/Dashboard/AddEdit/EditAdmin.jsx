@@ -18,18 +18,22 @@ export default function EditAdmin() {
     const [cities, setCities] = useState([]);
     const [govs, setGovs] = useState([]);
     const [load , setLoad] = useState(true)
+    const [error, setError] = useState('')
     const [data , setData] = useState([])
-    console.log(data);
     const [cityLoad , setCityLoad] = useState(true)
     const [btnLoad , setBtnLoad] = useState(false)
     const { id } = useParams();
     useEffect(() => {
         setLoad(true);
         const fetchData = async () => {
-            await Axios.get(`${url === "city-admins" ? `/cityadmin/${id}` : `/GovernorateAdmin/${id}`}`)
-            .then((response) => {
+            try{
+                await Axios.get(`${url === "city-admins" ? `/cityadmin/${id}` : `/GovernorateAdmin/${id}`}`)
+                .then((response) => {
                 setData(response.data);
             })
+            }catch(err){
+            setError('لم يتعم العثور على البلاغ')
+        }
         }
         fetchData()
     } , [id , url])
@@ -152,7 +156,7 @@ export default function EditAdmin() {
                     تعديل مشرف
                 </h1>
             </div>
-            {load ? <div className="mt-10"><Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={380} width="100%" /></div> : <div className="bg-white mt-10 px-2 text-right rounded-sm dark:border-[#363D3E] dark:bg-[#191A1A]">
+            {(load && !error) ? <div className="mt-10"><Skeleton count={1} className="dark:[--base-color:_#202020_!important] dark:[--highlight-color:_#444_!important]" height={380} width="100%" /></div> : !error ? <div className="bg-white mt-10 px-2 text-right rounded-sm dark:border-[#363D3E] dark:bg-[#191A1A]">
                 <h2 className="text-2xl py-5 border-b border-[#f3f2f9] dark:border-[#363D3E] dark:bg-[#191A1A] dark:text-white">البيانات</h2>
                 
                 <form className="py-5" onSubmit={form.handleSubmit}>
@@ -248,6 +252,10 @@ export default function EditAdmin() {
                         </button>
                     </div>
                 </form>
+            </div> :
+            <div className="bg-white mt-10 px-2 text-right rounded-sm dark:border-[#363D3E] dark:bg-[#191A1A]">
+                <h2 className="text-2xl py-5 border-b border-[#f3f2f9] dark:border-[#363D3E] dark:bg-[#191A1A] dark:text-white">البيانات</h2>
+                <p className="py-4 text-sm dark:text-white">لم يتم العثور على المشرف</p>
             </div>}
         </div>
     );

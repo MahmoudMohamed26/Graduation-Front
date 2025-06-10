@@ -22,7 +22,6 @@ export default function SingleReport(){
             return res.data
         }
         catch(err){
-            console.log(err);
             setError('لم يتعم العثور على البلاغ')
         }
     }
@@ -33,7 +32,6 @@ export default function SingleReport(){
         staleTime: 1000 * 60,
     })
     const { text: statusText, color: statusColor } = data ? StatusMapper(data.currentStatus) : { text: '', color: '' };
-    console.log(data);
     return(
         <div>
             <div className="flex">
@@ -64,7 +62,7 @@ export default function SingleReport(){
                     <p className="mb-5">القسم : <span className="text-[#666] dark:text-[#acabab]">{departmentMapper(data.department)}</span></p>
                     <p className="mb-5">استلمها : <span className="text-[#666] dark:text-[#acabab]">{data.assignedEmployeeName}</span></p>
                     <p className="mb-5">الحالة : <span style={{ color: statusColor }}>{statusText}</span></p>
-                </div> : <p className="py-4 text-sm">لم يتم العثور على البلاغ</p>}
+                </div> : <p className="py-4 text-sm dark:text-white">لم يتم العثور على البلاغ</p>}
             </div>
             {!error && <div className="bg-white mt-5 px-2 text-right rounded-sm dark:border-[#363D3E] dark:bg-[#191A1A]">
                 <h2 className="text-2xl py-5 border-b border-[#f3f2f9] dark:border-[#363D3E] dark:bg-[#191A1A] dark:text-white">مكان البلاغ</h2>
