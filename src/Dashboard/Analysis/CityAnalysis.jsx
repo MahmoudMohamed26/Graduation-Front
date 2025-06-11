@@ -26,6 +26,7 @@ export default function CityAnalysis() {
                     title="عدد الشكاوي" 
                     icon={<div className="p-3 bg-red-100 rounded-full"><CiWarning className="text-red-600" size={28} /></div>} 
                     endpoint={"reportsCountPerCity"}
+                    what={"all"}
                     type={"city"}
                     dest={"createReport"}
                     state="down" 
@@ -36,6 +37,7 @@ export default function CityAnalysis() {
                         title="جاري الحل" 
                         icon={<div className="p-3 bg-blue-100 rounded-full"><CiClock2 className="text-blue-600" size={28} /></div>} 
                         endpoint={"inProgressReportsCountPerCity"}
+                        what={"inprogress"}
                         type={"city"}
                         dest={"updateStatus"}
                         state="up" 
@@ -46,6 +48,7 @@ export default function CityAnalysis() {
                         title="تم الحل" 
                         icon={<div className="p-3 bg-green-100 rounded-full"><MdDone className="text-green-600" size={28} /></div>} 
                         endpoint={"ResolvedReportsCountPerCity"}
+                        what={"resolved"}
                         type={"city"}
                         dest={"updateStatus"}
                         state="down" 

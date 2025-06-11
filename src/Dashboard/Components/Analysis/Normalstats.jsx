@@ -1,66 +1,65 @@
 import { useEffect, useRef, useState } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
+import { Axios } from "../../../API/Axios";
 
 export default function Normalstats(props){
 
     const ws = process.env.REACT_APP_WS_URL;
     const stompClient = useRef(null);
     const [count, setCount] = useState(null);
+
+    // Function to fetch initial data
+    const fetchInitialData = async () => {
+        try {
+            const govId = 2;
+            const cityId = 46;
+            
+            const res = await Axios.get(`/reports/analysis/init/report/numbers/${props.type === "gov" ? `gov/${govId}` : `city/${cityId}`}`);
+            console.log(res);
+            // Set initial count based on endpoint
+            let initialCount;
+            if (props.what === "resolved") {
+                initialCount = res.data.allResolvedReports;
+            } else if (props.what === "inprogress") {
+                initialCount = res.data.allInProgressReports;
+            } else if (props.what === "all") {
+                initialCount = res.data.allReports;
+            }
+
+            setCount(initialCount);
+        } catch (error) {
+            console.error("Error fetching initial data:", error);
+        }
+    };
+
     useEffect(() => {
-    const socket = new SockJS(ws);
-    stompClient.current = new Client({
-    webSocketFactory: () => socket,
+        // Fetch initial data first
+        fetchInitialData();
 
+        const socket = new SockJS(ws);
+        stompClient.current = new Client({
+            webSocketFactory: () => socket,
 
-    onConnect: () => {
+            onConnect: () => {
+                const govId = 2;
+                const cityId = 46;
 
-    const dummyReport = {
-        title: "Dummy Report Title",
-        contactInfo: "01000000000",
-        cityId: 46,
-        description: "This is a dummy report for testing.",
-        latitude: 30.1234,
-        longitude: 31.5678,
-        department: "Housing_and_Utilities_Department",
-        citizenId: 123
-    };
+                stompClient.current.subscribe(`/topic/${props.endpoint}/${props.type === "gov" ? govId : cityId}`, (message) => {
+                    const cityData = JSON.parse(message.body);
+                    console.log("reports count per gov", cityData);
+                    setCount(cityData);
+                });
+            },
+        });
 
-    const update = {
-        reportId: 381,
-        newStatus: "In_Progress",
-        notes: "This is a dummy update for testing.",
-        employeeId: 349
-    }
+        stompClient.current.activate();
 
-    // const dummyReport = null
-
-    const govId = 2
-    const cityId = 46
-
-    stompClient.current.publish({
-        destination: `/app/${props.dest}`,
-        body: JSON.stringify(props.dest === "createReport" ? dummyReport : update),
-    });
-    stompClient.current.subscribe(`/topic/${props.endpoint}/${props.type === "gov" ? govId : cityId}`, (message) => {
-        const cityData = JSON.parse(message.body);
-        console.log("reports count per gov", cityData);
-        setCount(cityData)
-    });
-
-
-    },
-
-});
-
-    stompClient.current.activate();
-
-    return () => {
-        if (stompClient.current) stompClient.current.deactivate();
-    };
-    // eslint-disable-next-line
+        return () => {
+            if (stompClient.current) stompClient.current.deactivate();
+        };
+        // eslint-disable-next-line
     }, []);
-
 
     return(
         <div className="bg-white dark:bg-[#191A1A] rounded-md py-4 px-3">
