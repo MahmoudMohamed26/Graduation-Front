@@ -36,9 +36,9 @@ function App() {
             <Route path="governorate-admins/:id" element={<EditAdmin />} />
             <Route path="city-admins/:id" element={<EditAdmin />} />
             <Route path="add-admin" element={<AddAdmin />} />
+            <Route path="governorate-admins" element={<GovAdmins />} />
           </Route>
           <Route element={<RequireAuth allowedRoles={[2000, 1999]} />}>
-            <Route path="governorate-admins" element={<GovAdmins />} />
             <Route path="governorate-data" element={<GovAnalysis />} />
           </Route>
           <Route element={<RequireAuth allowedRoles={[2000, 1998]} />}>

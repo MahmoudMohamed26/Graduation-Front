@@ -22,7 +22,7 @@ export default function CityReportsPie() {
     const dummyReport = {
       title: "Dummy Report Title",
       contactInfo: "01000000000",
-      cityId: 45,
+      cityId: 30,
       description: "This is a dummy report for testing.",
       latitude: 30.1234,
       longitude: 31.5678,
@@ -30,7 +30,7 @@ export default function CityReportsPie() {
       citizenId: 123
     };
 
-    const govId = 2
+    const govId = 1
 
     stompClient.current.publish({
       destination: "/app/createReport",

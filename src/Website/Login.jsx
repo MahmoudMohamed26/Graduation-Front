@@ -16,6 +16,7 @@ export default function SignIn() {
         } , [])
 
     const [error, setError] = useState("");
+    const allowedUsers = ["MasterAdmin" , "GovernorateAdmin" , "cityAdmin"];
     const [loading, setLoading] = useState(false);
     const [showpass , setShowPass] = useState(false);
     const validationSchema = Yup.object({
@@ -35,7 +36,11 @@ export default function SignIn() {
             try {
                 setLoading(true);
                 setError("");
-                await Axios.post(`/login`, values);
+                const res = await Axios.post(`/login`, values);
+                if(!allowedUsers.includes(res.data.type)){
+                    await Axios.get(`/logout`)
+                    throw error
+                }
                 toast.success('تم تسجيل الدخول بنجاح', {
                     position: "top-left",
                     autoClose: 5000,

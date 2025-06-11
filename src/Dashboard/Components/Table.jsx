@@ -90,31 +90,28 @@ export default function Table(props){
             </td>
         ))}
         
-        <td className="py-4 flex justify-center items-center space-x-4">
+        <td className="p-4 flex gap-2 items-center">
             {props.url === "reports" && (
-            <Link to={`${item.reportId}`} className="!ml-3">
+            <Link to={`${item.reportId}`}>
                 <IconEye stroke={2} className="cursor-pointer text-[#9788f8] hover:text-[#725DFE]" />
             </Link>
             )}
 
             {props.url === "employees" && (
             <>
-                {/* City-level permission overrides */}
                 {props.adminType === "city" ? (
                 user.type === 2000 ? (
                     <>
-                    <Link to={`stats/${item.empId}`} className="!ml-3">
+                    <Link to={`stats/${item.empId}`}>
                         <IconEye stroke={2} className="cursor-pointer text-[#9788f8] hover:text-[#725DFE]" />
                     </Link>
-                    <Link to={`${item.empId}`} className="text-blue-500 hover:text-blue-700 !ml-3">
+                    <Link to={`${item.empId}`} className="text-blue-500 hover:text-blue-700">
                         <IconEdit stroke={2} />
                     </Link>
                     <button
                         onClick={() => HandleDeleteConfirmation(item.empId, item.type)}
-                        className="mr-2"
                         title="Delete"
                     >
-                        {/* Delete SVG */}
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-red-500 hover:fill-red-700" viewBox="0 0 24 24">
                         <path
                             d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"
@@ -128,25 +125,22 @@ export default function Table(props){
                     </button>
                     </>
                 ) : (
-                    <span className="text-gray-400 text-sm italic">لا يوجد عمليات</span>
+                    <span className="text-gray-400 text-sm italic min-h-[24px]">لا يوجد</span>
                 )
                 ) : (
-                // Normal adminType case
                 <>
-                    <Link to={`stats/${item.empId}`} className="!ml-3">
+                    <Link to={`stats/${item.empId}`}>
                     <IconEye stroke={2} className="cursor-pointer text-[#9788f8] hover:text-[#725DFE]" />
                     </Link>
                     {(user.type === 2000 || user.type === 1998) && (
                     <>
-                        <Link to={`${item.empId}`} className="text-blue-500 hover:text-blue-700 !ml-3">
+                        <Link to={`${item.empId}`} className="text-blue-500 hover:text-blue-700">
                         <IconEdit stroke={2} />
                         </Link>
                         <button
                         onClick={() => HandleDeleteConfirmation(item.empId, item.type)}
-                        className="mr-2"
                         title="Delete"
                         >
-                        {/* Delete SVG */}
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-red-500 hover:fill-red-700" viewBox="0 0 24 24">
                             <path
                                 d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"
@@ -169,12 +163,11 @@ export default function Table(props){
                 <>
                     {user?.type === 2000 ? (
                     <>
-                        <Link to={`${item.adminId}`} className="text-blue-500 hover:text-blue-700 !ml-3">
+                        <Link to={`${item.adminId}`} className="text-blue-500 hover:text-blue-700">
                         <IconEdit stroke={2} />
                         </Link>
                         <button
                         onClick={() => HandleDeleteConfirmation(item.adminId, item.type)}
-                        className="mr-2"
                         title="Delete"
                         >
                         <svg
@@ -192,7 +185,7 @@ export default function Table(props){
                         </button>
                     </>
                     ) : (
-                    <span className="dark:text-white text-sm text-gray-800">لا يوجد</span>
+                    <span className="dark:text-white text-sm text-gray-800 min-h-[24px]">لا يوجد</span>
                     )}
                 </>
             )}

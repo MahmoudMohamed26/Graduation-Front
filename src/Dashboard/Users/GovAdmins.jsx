@@ -4,6 +4,7 @@ import { Axios } from "../../API/Axios"
 import Table from "../Components/Table"
 import { useEffect, useState } from "react"
 import useDebounce from "../../helpers/Debounce"
+import { IconChevronLeftPipe, IconChevronRightPipe } from "@tabler/icons-react"
 export default function GovAdmins(){
 
     useEffect(() => {
@@ -56,11 +57,19 @@ export default function GovAdmins(){
                 <Table headers={headers} type="admins" admintype={"gov"} url={"admins"} change={true} page={page} loading={isLoading} debounce={isDebouncing} data={data?.content || []} onDelete={handleDelete} />
                 <div>
                     <div className="flex justify-end gap-10 items-center mt-5">
-                        <button onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                        <div className="flex gap-2">
+                            <button onClick={() => setPage(0)} disabled={page === 0|| isDebouncing || isLoading} className="px-4 py-1 bg-[#725DFE] enabled:hover:bg-[#604CC7] text-white duration-300 text-sm rounded-sm disabled:opacity-50">
+                            <IconChevronRightPipe stroke={3} size={15} />
+                            </button>
+                            <button onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
                             className="px-4 py-1 bg-[#725DFE] enabled:hover:bg-[#604CC7] text-white duration-300 text-sm rounded-sm disabled:opacity-50"
-                            disabled={page === 0}>السابق</button>
+                            disabled={page === 0 || isDebouncing || isLoading}>السابق</button>
+                        </div>
                         <p className="text-sm text-[#333] dark:text-white">{page+1}</p>
-                        <button onClick={() => setPage((prev) => prev + 1)} disabled={page + 1 >= data?.totalPages || isDebouncing || isLoading} className="px-4 py-1 text-sm duration-300 bg-[#725DFE] text-white enabled:hover:bg-[#604CC7] disabled:opacity-50 rounded-sm">التالي</button>
+                        <div className="flex gap-2">
+                            <button onClick={() => setPage((prev) => prev + 1)} disabled={page + 1 >= data?.totalPages || isDebouncing || isLoading} className="px-4 py-1 text-sm duration-300 bg-[#725DFE] text-white enabled:hover:bg-[#604CC7] disabled:opacity-50 rounded-sm">التالي</button>
+                            <button onClick={() => setPage(data?.totalPages - 1)} disabled={page === data?.totalPages - 1 || isDebouncing || isLoading} className="px-4 py-1 text-sm duration-300 bg-[#725DFE] text-white enabled:hover:bg-[#604CC7] disabled:opacity-50 rounded-sm "><IconChevronLeftPipe stroke={3} size={15} /></button>
+                        </div>
                     </div>
                 </div>
             </div>

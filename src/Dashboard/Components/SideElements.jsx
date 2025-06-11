@@ -40,17 +40,17 @@ const Elements = [{
     icon: <IoPersonAddOutline size={20} />,
     role: [2000 , 1998]
 }, {
+    name: 'مشرفين المحافظات',
+    category: 'المستخدمين',
+    to: '/dashboard/governorate-admins',
+    icon: <RiGovernmentLine size={20} />,
+    role: [2000]
+}, {
     name: 'مشرفين المدن',
     category: 'المستخدمين',
     to: '/dashboard/city-admins',
     icon: <PiCity size={20} />,
     role: [2000 , 1999 , 1998]
-}, {
-    name: 'مشرفين المحافظات',
-    category: 'المستخدمين',
-    to: '/dashboard/governorate-admins',
-    icon: <RiGovernmentLine size={20} />,
-    role: [2000 , 1999]
 }, {
     name: 'الموظفين',
     category: 'المستخدمين',
