@@ -16,7 +16,7 @@ export default function SignIn() {
         } , [])
 
     const [error, setError] = useState("");
-    const allowedUsers = ["MasterAdmin" , "GovernorateAdmin" , "cityAdmin"];
+    const allowedUsers = ["MasterAdmin" , "GovernorateAdmin" , "CityAdmin"];
     const [loading, setLoading] = useState(false);
     const [showpass , setShowPass] = useState(false);
     const validationSchema = Yup.object({

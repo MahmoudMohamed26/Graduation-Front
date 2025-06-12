@@ -7,7 +7,7 @@ export default function CitySolutionTime() {
 
   const chartData = {
     series: [{
-      data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
+      data: [30, 20, 30, 40, 100, 90, 70, 80, 90, 100 , 40 , 60 ]
     }],
     options: {
       colors: ['#725DFE'],
@@ -29,10 +29,13 @@ export default function CitySolutionTime() {
         enabled: false
       },
       xaxis: {
-        categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
-          'United States', 'China', 'Germany'
-        ],
+        categories: ['مدينة نصر', 'التجمع الخامس', 'المعادي', 'مصر الجديدة', 'الزمالك', 'العباسية', 'شبرا', 'حلوان', 'المرج', 'عين شمس', 'الهرم', 'إمبابة']
+      ,
+      title: {
+            text: "الدقائق",
+        },
       }
+      
     },
   };
 

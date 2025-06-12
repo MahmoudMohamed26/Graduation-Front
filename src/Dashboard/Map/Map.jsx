@@ -217,7 +217,7 @@ const Map = () => {
   }, [user?.governorateName]); // Re-run when user's governorate changes
 
   const fetchReports = async () => {
-    const res = await Axios.get(`/reports/allReports`);
+    const res = await Axios.get(`/reports/allReportsWithOutClosedAndCancelled`);
     return res.data;
   };
     

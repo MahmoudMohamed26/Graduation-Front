@@ -1,44 +1,51 @@
 import { Link } from "react-router-dom";
 import StatusMapper from "../../../helpers/StatusMapper";
 import wordCut from "../../../helpers/WordCut";
+import { Axios } from "../../../API/Axios";
+import { useQuery } from "@tanstack/react-query";
+import Skeleton from "react-loading-skeleton";
+import { useContext } from "react";
+import { AuthContext } from "../../../Context/AuthContext";
 
-export default function LastReports() {
+export default function LastReports(props) {
+  const { user } = useContext(AuthContext)
+  const fetchData = async () => {
 
-  const data =[
-    {
-      id: 1,
-      title: "تسرب مياه",
-      describtion: "بلاغ عن تسرب مياه في الشارع الرئيسي بالقرب من المدرسة",
-      status: "Submitted"
-    },
-    {
-      id: 2,
-      title: "انقطاع كهرباء",
-      describtion: "بلاغ عن انقطاع كهرباء في حي الهرم",
-      status: "Submitted"
-    },
-    {
-      id: 3,
-      title: "مشكلة في الصرف الصحي",
-      describtion: "بلاغ عن مشكلة في الصرف الصحي في منطقة المعادي",
-      status: "In_Progress"
-    },{
-      id: 4,
-      title: "تسرب غاز",
-      describtion: "بلاغ عن تسرب غاز في منطقة الزمالك",
-      status: "Resolved"
-    }
-  ]
+    let url = "";
+    url = props.type === "gov"
+        ? `/reports/analysis/init/report/top-4-reports/gov/${props.govId !== '' ? props.govId : user?.governorateId}`
+        : `/reports/analysis/init/report/top-4-reports/city/${props.cityId !== '' ? props.cityId : user?.cityId}`;
+    console.log(url);
 
-  const showData = data.map((el , index) => {
-    const {text, color} = StatusMapper(el.status);
-    return(
-      <Link key={index} className="block px-2 py-5 dark:hover:bg-[#121313] duration-300 hover:bg-gray-100" to={`/dashboard/reports/209`}>
+    const res = await Axios.get(url)
+    return res.data
+  }
+  
+  const { data, isLoading } = useQuery({
+    queryKey: ['lastReports' , props.govId , props.cityId],
+    queryFn: fetchData,
+    staleTime: 1000 * 60,
+  })
+  
+  
+  // Return skeleton loader while loading
+  if (isLoading) {
+    return <Skeleton count={1} className="dark:[--base-color:_#202020_!important] h-[493px] py-4 dark:[--highlight-color:_#444_!important]"/>
+  }
+
+  // Check if data is empty
+  const isEmpty = !data || data.length === 0;
+
+  // Safe data processing - only after loading is complete
+  const showData = (data || []).map((el, index) => {
+    const {text, color} = StatusMapper(el?.currentStatus);
+    return (
+      <Link key={index} className="block px-2 py-5 dark:hover:bg-[#121313] duration-300 hover:bg-gray-100" to={`/dashboard/reports/${el?.reportId}`}>
         <div className="flex justify-between">
           <div>
-            <h3 className="text-xs">رقم الشكوى: <span className="text-[#666] dark:text-[#acabab]">{el.id}</span></h3>
-            <h3 className="text-xs mt-2">عنوان الشكوى: <span className="text-[#666] dark:text-[#acabab]">{el.title}</span></h3>
-            <p className="text-xs">تفاصيل الشكوى: <span className="text-[#666] dark:text-[#acabab]">{wordCut(el.describtion , 20)}</span></p>
+            <h3 className="text-xs">رقم الشكوى: <span className="text-[#666] dark:text-[#acabab]">{el?.reportId}</span></h3>
+            <h3 className="text-xs mt-2">عنوان الشكوى: <span className="text-[#666] dark:text-[#acabab]">{el?.title}</span></h3>
+            <p className="text-xs">تفاصيل الشكوى: <span className="text-[#666] dark:text-[#acabab]">{wordCut(el?.description, 20)}</span></p>
           </div>
           <p className="text-xs">الحاله: <span style={{color: color}}>{text}</span></p>
         </div>
@@ -46,17 +53,19 @@ export default function LastReports() {
     )
   })
 
-  return(
-    <div className="bg-white dark:bg-[#191A1A] rounded-md pt-4 w-full">
-        <h1 className="w-fit text-2xl mx-2 relative before:absolute before:h-[1px] before:w-[calc(100%)] before:bg-slate-300 before:dark:bg-[#363D3E] before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] dark:text-white after:bottom-[-15px] after:right-0">اخر البلاعات</h1>
-        <div className="mt-5">
-            <div className="text-black dark:text-white">
-                <div >
-                  {showData}
-                </div>
-                <Link to="/dashboard/employees" className="hover:bg-[#604CC7] text-center text-white px-4 bg-[#725DFE] w-full block duration-300 rounded-b-md py-[0.54rem]">جميع البلاغات</Link>
-            </div>
+  return (
+    <div className="bg-white dark:bg-[#191A1A] rounded-md pt-4 min-h-[493px] h-full flex flex-col">
+      <h1 className="w-fit text-2xl mx-2 relative before:absolute before:h-[1px] before:w-[calc(100%)] before:bg-slate-300 before:dark:bg-[#363D3E] before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] dark:text-white after:bottom-[-15px] after:right-0">اخر الشكاوي</h1>
+      
+      <div className="mt-5 flex-1 flex flex-col text-black dark:text-white">
+        <div className="flex-1">
+          {isEmpty ? 
+            <p className="text-sm h-full flex items-center justify-center">لا يوجد شكاوي</p> 
+            : showData
+          }
         </div>
+        <Link to="/dashboard/employees" className="hover:bg-[#604CC7] text-center text-white px-4 bg-[#725DFE] w-full duration-300 rounded-b-md py-[0.54rem] mt-auto">جميع الشكاوي</Link>
+      </div>
     </div>
   )
 }
