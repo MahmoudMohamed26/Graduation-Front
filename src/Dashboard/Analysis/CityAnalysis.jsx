@@ -101,6 +101,7 @@ export default function CityAnalysis() {
                     && <Skeleton count={1} className="dark:[--base-color:_#202020_!important] py-4 dark:[--highlight-color:_#444_!important]" height={132}/>}
                     <div style={{display: loadingCount < COUNT_TOUNLOAD ? 'none' : 'block' }}>
                         <Normalstats 
+                        initial={0}
                         title="عدد الشكاوي" 
                         icon={<div className="p-3 bg-red-100 rounded-full"><CiWarning className="text-red-600" size={28} /></div>} 
                         endpoint={"reportsCountPerCity"}
@@ -116,6 +117,7 @@ export default function CityAnalysis() {
                     && <Skeleton count={1} className="dark:[--base-color:_#202020_!important] py-4 dark:[--highlight-color:_#444_!important]" height={132}/>}
                     <div style={{display: loadingCount < COUNT_TOUNLOAD ? 'none' : 'block' }}>
                         <Normalstats 
+                            initial={0}
                             title="جاري الحل" 
                             icon={<div className="p-3 bg-blue-100 rounded-full"><CiClock2 className="text-blue-600" size={28} /></div>} 
                             endpoint={"inProgressReportsCountPerCity"}
@@ -131,6 +133,7 @@ export default function CityAnalysis() {
                     && <Skeleton count={1} className="dark:[--base-color:_#202020_!important] py-4 dark:[--highlight-color:_#444_!important]" height={132}/>}
                     <div style={{display: loadingCount < COUNT_TOUNLOAD ? 'none' : 'block' }}>
                         <Normalstats 
+                            initial={0}
                             title="تم الحل" 
                             icon={<div className="p-3 bg-green-100 rounded-full"><MdDone className="text-green-600" size={28} /></div>} 
                             endpoint={"ResolvedReportsCountPerCity"}
@@ -146,6 +149,7 @@ export default function CityAnalysis() {
                     && <Skeleton count={1} className="dark:[--base-color:_#202020_!important] py-4 dark:[--highlight-color:_#444_!important]" height={132}/>}
                     <div style={{display: loadingCount < COUNT_TOUNLOAD ? 'none' : 'block' }}>
                         <Normalstats 
+                            initial={0}
                             title="تقييم الموظفيين" 
                             icon={<div className="p-3 bg-yellow-100 rounded-full"><GrUserWorker className="text-yellow-600" size={28} /></div>} 
                             count="3.9"
@@ -159,16 +163,16 @@ export default function CityAnalysis() {
 
                 <div className="display grid gap-2 mb-2 grid-cols-1 lg:grid-cols-5 items-stretch">
                     <div className="lg:col-span-2"><LastReports type={"city"} cityId={cityId} /></div>
-                    <div className="lg:col-span-3"><CurrentReports /></div>
+                    <div className="lg:col-span-3"><CurrentReports type={"city"} cityId={cityId} /></div>
                 </div>
 
                 <div className="display grid grid-cols-1 lg:grid-cols-5 gap-2 mb-2 items-stretch">
-                    <div className="lg:col-span-2"><TopRated /></div>
-                    <div className="lg:col-span-3"><DepartReports /></div>
+                    <div className="lg:col-span-2"><TopRated type={"city"} cityId={cityId} /></div>
+                    <div className="lg:col-span-3"><DepartReports type={"city"} cityId={cityId} /></div>
                 </div>
 
                 <div className="display grid grid-cols-1 gap-2 mb-2 items-stretch">
-                    <div className=""><Fastest /></div>
+                    <div className=""><Fastest type={"city"} cityId={cityId} /></div>
                 </div>
             </div>}
         </>

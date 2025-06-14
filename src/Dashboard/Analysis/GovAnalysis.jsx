@@ -68,6 +68,7 @@ export default function CityAnalysis() {
                     && <Skeleton count={1} className="dark:[--base-color:_#202020_!important] py-4 dark:[--highlight-color:_#444_!important]" height={132}/>}
                     <div style={{display: loadingCount < COUNT_TOUNLOAD ? 'none' : 'block' }}>
                         <Normalstats 
+                            initial={0}
                             title="عدد الشكاوي" 
                             icon={<div className="p-3 bg-red-100 rounded-full"><CiWarning className="text-red-600" size={28} /></div>} 
                             endpoint={"reportsCountPerGovernorate"}
@@ -83,6 +84,7 @@ export default function CityAnalysis() {
                     && <Skeleton count={1} className="dark:[--base-color:_#202020_!important] py-4 dark:[--highlight-color:_#444_!important]" height={132}/>}
                     <div style={{display: loadingCount < COUNT_TOUNLOAD ? 'none' : 'block' }}>
                         <Normalstats 
+                            initial={0}
                             title="جاري الحل"
                             icon={<div className="p-3 bg-blue-100 rounded-full"><CiClock2 className="text-blue-600" size={28} /></div>} 
                             endpoint={"inProgressReportsCountPerGovernorate"}
@@ -98,6 +100,7 @@ export default function CityAnalysis() {
                     && <Skeleton count={1} className="dark:[--base-color:_#202020_!important] py-4 dark:[--highlight-color:_#444_!important]" height={132}/>}
                     <div style={{display: loadingCount < COUNT_TOUNLOAD ? 'none' : 'block' }}>
                         <Normalstats 
+                            initial={0}
                             title="تم الحل" 
                             icon={<div className="p-3 bg-green-100 rounded-full"><MdDone className="text-green-600" size={28} /></div>} 
                             endpoint={"ResolvedReportsCountPerGovernorate"}
@@ -113,6 +116,7 @@ export default function CityAnalysis() {
                     && <Skeleton count={1} className="dark:[--base-color:_#202020_!important] py-4 dark:[--highlight-color:_#444_!important]" height={132}/>}
                     <div style={{display: loadingCount < COUNT_TOUNLOAD ? 'none' : 'block' }}>
                         <Normalstats 
+                            initial={0}
                             title="تقييم الموظفيين" 
                             icon={<div className="p-3 bg-yellow-100 rounded-full"><GrUserWorker className="text-yellow-600" size={28} /></div>} 
                             count="3.9"
@@ -128,15 +132,15 @@ export default function CityAnalysis() {
                     <div className="lg:col-span-2"><CityReportsPie govId={govId} type={"gov"} /></div>
                 </div>
                 <div className="display grid grid-cols-1 lg:grid-cols-5 gap-2 mb-2 items-stretch">
-                    <div className="lg:col-span-3 h-full"><CurrentReports /></div>
-                    <div className="lg:col-span-2"><TopRated /></div>
+                    <div className="lg:col-span-3 h-full"><CurrentReports govId={govId} type={"gov"} /></div>
+                    <div className="lg:col-span-2"><TopRated govId={govId} type={"gov"} /></div>
                 </div>
                 <div className="display grid grid-cols-1 lg:grid-cols-5 gap-2 mb-2 items-stretch">
-                    <div className="lg:col-span-2 h-full"><Fastest /></div>
-                    <div className="lg:col-span-3 h-full"><DepartReports /></div>
+                    <div className="lg:col-span-2 h-full"><Fastest type={"gov"} govId={govId} /></div>
+                    <div className="lg:col-span-3 h-full"><DepartReports govId={govId} type={"gov"} /></div>
                 </div>
                 <div className="display grid grid-cols-1 lg:grid-cols-4 gap-2 mb-2 items-stretch">
-                    <div className="lg:col-span-4"><CitySolutionTime /></div>
+                    <div className="lg:col-span-4"><CitySolutionTime govId={govId} type={"gov"} /></div>
                 </div>
             </div>}
         </>

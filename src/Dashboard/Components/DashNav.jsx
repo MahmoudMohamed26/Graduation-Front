@@ -38,7 +38,7 @@ export default function DashNav(){
 
 
     return(
-        <div  className="bg-white dark:bg-[#191A1A] sticky top-0 z-10 shadow-sm select-none">
+        <div  className="bg-white dark:bg-[#191A1A] sticky top-0 z-20 shadow-sm select-none">
             <div className="px-[20px] flex justify-between items-center h-[74px] dark:border-[#363D3E] border-b-[1px]">
                 <div className="flex gap-[20px] items-center">
                     <div className='border-l-[1px] hidden md:flex pl-[15px] border-[#e5e5e5] dark:border-[#363D3E] w-[250px] justify-center items-center h-[73px]'>

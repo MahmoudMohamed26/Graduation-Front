@@ -60,7 +60,6 @@ export default function CityReportsPie(props) {
         // Subscribe to real-time updates
         stompClient.current.subscribe(`/topic/reportsCountPerCitiesInGovernorate/${govId}`, (message) => {
           const cityData = JSON.parse(message.body);
-          console.log("Received city data:", cityData);
           
           const newLabels = cityData.map(item => item.cityName);
           const newSeries = cityData.map(item => item.reportCount);

@@ -57,7 +57,6 @@ export default function Normalstats(props){
 
                 stompClient.current.subscribe(`/topic/${props.endpoint}/${props.type === "gov" ? props.govId !== '' ? props.govId : user?.governorateId : props.cityId !== '' ? props.cityId : user?.cityId}`, (message) => {
                     const cityData = JSON.parse(message.body);
-                    console.log("reports count per gov", cityData);
                     setCount(cityData);
                 });
             },
@@ -78,8 +77,8 @@ export default function Normalstats(props){
                 {props.icon}
             </div>
             <div className="mt-2">
-                <h3 className="text-4xl font-semiboldbold dark:text-white">{count}</h3>
-                {/* count !== undefined ? Number(count.toFixed(1)) : '...' */}
+                <h3 className="text-4xl font-semiboldbold dark:text-white">{count !== undefined ? Math.floor(count * 100)/100 : '...'}</h3>
+                
             </div>
         </div>
     )
