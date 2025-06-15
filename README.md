@@ -1,70 +1,92 @@
-# Getting Started with Create React App
+# CivicEye Web Admin Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+CivicEye is a full-stack infrastructure monitoring platform built to streamline civic issue reporting and resolution across Egypt. This repository contains the source code for the web-based admin dashboard that allows administrators at different levels (City, Governorate, and Master) to analyze reports, manage employees and users, and visualize nationwide infrastructure data in real time.
 
-## Available Scripts
+## 🌐 Overview
 
-In the project directory, you can run:
+The CivicEye admin dashboard is built using **React**, **Tailwind CSS**, and **Spring Boot** for backend services. It offers comprehensive tools for infrastructure monitoring, live report tracking, employee evaluation, and geographic visualization using an interactive map.
 
-### `npm start`
+![Screenshot_3](https://github.com/user-attachments/assets/b91cf1e3-a843-444f-956b-3248f83ad839)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+![Screenshot_5](https://github.com/user-attachments/assets/e1e4206b-0d90-4201-bfa3-136ec6a6947b)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🧩 Features
 
-### `npm test`
+- 🔐 **Role-Based Access Control**
+  - CityAdmin: Can view and manage reports and employees in their city.
+  - GovernorateAdmin: Can analyze multiple cities within their governorate.
+  - MasterAdmin: Full system control with access to all governorates and admin management.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- 📊 **Real-Time Analytics**
+  - Live charts for reports by department, region, and time.
+  - Employee leaderboards and ratings.
+  - Department-wise and city-wise report comparisons.
 
-### `npm run build`
+- 🗺️ **Interactive Egypt Map**
+  - Boundaries visualized with heatmap overlays.
+  - Markers for live reports.
+  - GeoJSON + Leaflet + OpenStreetMap integration.
+  
+![Screenshot_2](https://github.com/user-attachments/assets/cdcefcef-90d5-47bb-a1bd-23341e709792)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- 📋 **Reports Management**
+  - View all submitted reports with filters.
+  - Review detailed info including location, citizen, and assigned employee.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+![Screenshot_4](https://github.com/user-attachments/assets/af01239c-8649-4404-a177-7547d10811ac)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+![Screenshot_1](https://github.com/user-attachments/assets/77f6f261-f1f5-4517-b21e-49dbc7e25d17)
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- 👷 **Employee Management**
+  - Add employees by city and governorate.
+  - View employee performance and activity.
+  - Restriction: CityAdmins can only manage employees in their city.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![Screenshot_8](https://github.com/user-attachments/assets/95a60ebf-f951-42b0-a92a-1872db3065ce)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- 👤 **Admin Management**
+  - MasterAdmin can add or remove admins of all roles.
+  - View all admins in the system.
 
-## Learn More
+![Screenshot_6](https://github.com/user-attachments/assets/cde8af14-6998-478b-8ed0-4a325d2d6bda)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## ⚙️ Tech Stack
 
-### Code Splitting
+### Frontend
+- React.js
+- Tailwind CSS
+- JavaScript
+- ApexCharts
+- WebSockets
+- Leaflet + OpenStreetMap + GeoJSON
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Backend
+- Spring Boot (Java)
+- REST APIs
+- WebSocket/STOMP
+- Maven
 
-### Analyzing the Bundle Size
+### Others
+- Firebase for real-time database and auth integration
+- Docker for deployment
+- GitHub Actions (optional for CI/CD)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 📦 Installation
 
-### Making a Progressive Web App
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/your-username/CivicEye-WebDashboard.git
+   cd CivicEye-WebDashboard
+   
+2. **Install frontend dependencies**
+   ```bash
+   cd client
+   npm install
+   
+3. **Run the frontend**
+   ```bash
+   npm start
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
