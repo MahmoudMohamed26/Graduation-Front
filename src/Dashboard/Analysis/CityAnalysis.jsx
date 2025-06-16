@@ -1,5 +1,4 @@
 import CurrentReports from "../Components/Analysis/CurrentReports";
-// import Fastest from "../Components/Analysis/Fastest";
 import DepartReports from "../Components/Analysis/DepartReports";
 import Normalstats from "../Components/Analysis/Normalstats";
 import TopRated from "../Components/Analysis/TopRated";

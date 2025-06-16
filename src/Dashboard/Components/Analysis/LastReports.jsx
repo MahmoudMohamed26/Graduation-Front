@@ -15,7 +15,7 @@ export default function LastReports(props) {
   const { user } = useContext(AuthContext);
   const queryClient = useQueryClient();
   const stompClient = useRef(null);
-  const [newDataIds, setNewDataIds] = useState(new Set()); // Track new data IDs
+  const [newDataIds, setNewDataIds] = useState(new Set());
   
   const fetchData = async () => {
     let url = "";
@@ -36,33 +36,22 @@ export default function LastReports(props) {
   useEffect(() => {
     if (!user) return;
 
-    // Create STOMP client with modern approach
     stompClient.current = new Client({
       webSocketFactory: () => new SockJS(ws),
-      debug: (str) => {
-        console.log('STOMP Debug:', str);
-      },
       onConnect: () => {
-        console.log('Connected to WebSocket');
         
         let url = "";
         url = props.type === "gov"
           ? `/topic/latestReports/gov/${props.govId !== '' ? props.govId : user?.governorateId}`
           : `/topic/latestReports/city/${props.cityId !== '' ? props.cityId : user?.cityId}`;
 
-        console.log('Subscribing to:', url);
-
         const subscription = stompClient.current.subscribe(url, (message) => {
           try {
-            console.log('Raw WebSocket message received:', message);
             const newData = JSON.parse(message.body);
-            console.log('Parsed WebSocket data:', newData);
             
-            // Get current data to compare
             const currentData = queryClient.getQueryData(['lastReports', props.govId, props.cityId]) || [];
             const currentIds = new Set(currentData.map(item => item.reportId));
             
-            // Find new items
             const newIds = new Set();
             newData.forEach(item => {
               if (!currentIds.has(item.reportId)) {
@@ -70,13 +59,10 @@ export default function LastReports(props) {
               }
             });
             
-            // Update new data IDs state
             setNewDataIds(prev => new Set([...prev, ...newIds]));
             
-            // Update the React Query cache with new data
             queryClient.setQueryData(['lastReports', props.govId, props.cityId], newData);
             
-            // Clear new markers after 5 seconds
             if (newIds.size > 0) {
               setTimeout(() => {
                 setNewDataIds(prev => {
@@ -92,7 +78,6 @@ export default function LastReports(props) {
           }
         });
 
-        // Store subscription for cleanup
         stompClient.current.subscription = subscription;
       },
       onStompError: (frame) => {
@@ -103,12 +88,9 @@ export default function LastReports(props) {
       }
     });
 
-    // Activate the client
     stompClient.current.activate();
 
-    // Cleanup on unmount or dependency change
     return () => {
-      console.log('Cleaning up WebSocket connection');
       if (stompClient.current) {
         stompClient.current.deactivate();
       }
@@ -120,10 +102,8 @@ export default function LastReports(props) {
     return <Skeleton count={1} className="dark:[--base-color:_#202020_!important] h-[493px] py-4 dark:[--highlight-color:_#444_!important]"/>
   }
 
-  // Check if data is empty
   const isEmpty = !data || data.length === 0;
 
-  // Safe data processing - only after loading is complete
   const showData = (data || []).map((el, index) => {
     const {text, color} = StatusMapper(el?.currentStatus);
     const isNew = newDataIds.has(el?.reportId);
