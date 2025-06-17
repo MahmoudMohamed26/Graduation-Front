@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { Axios } from "../../API/Axios"
 import { useQuery } from "@tanstack/react-query"
 import Skeleton from "react-loading-skeleton"
@@ -60,7 +60,7 @@ export default function SingleReport(){
                     <p className="mb-5">المحافظة : <span className="text-[#666] dark:text-[#acabab]">{data.governorateName}</span></p>
                     <p className="mb-5">المدينة : <span className="text-[#666] dark:text-[#acabab]">{data.cityName}</span></p>
                     <p className="mb-5">القسم : <span className="text-[#666] dark:text-[#acabab]">{departmentMapper(data.department)}</span></p>
-                    <p className="mb-5">استلمها : <span className="text-[#666] dark:text-[#acabab]">{data.assignedEmployeeName}</span></p>
+                    <p className="mb-5">استلمها : <Link to={`/dashboard/employees/stats/${data.assignedEmployeeId}`}><span className="text-[#666] hover:underline dark:text-[#acabab]">{data.assignedEmployeeName}</span></Link></p>
                     <p className="mb-5">الحالة : <span style={{ color: statusColor }}>{statusText}</span></p>
                 </div> : <p className="py-4 text-sm dark:text-white">لم يتم العثور على البلاغ</p>}
             </div>

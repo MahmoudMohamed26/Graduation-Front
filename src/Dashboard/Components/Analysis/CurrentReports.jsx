@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 import { Axios } from "../../../API/Axios";
 import Skeleton from "react-loading-skeleton";
 import { AuthContext } from "../../../Context/AuthContext";
-import SockJS from "sockjs-client";
-import { Stomp } from "@stomp/stompjs";
-
-const ws = process.env.REACT_APP_WS_URL;
+import { useWebSocketSubscription } from "../../../Context/WebSocketContex";
 
 export default function CurrentReports(props) {
     const [state, setState] = useState({
@@ -69,9 +66,29 @@ export default function CurrentReports(props) {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [realtimeData, setRealtimeData] = useState(null);
     const { user } = useContext(AuthContext);
-    const stompClientRef = useRef(null);
-    const subscriptionRef = useRef(null);
+
+    // Determine WebSocket topic based on type and IDs
+    const wsTopicKey = useMemo(() => {
+        if (props.type === "gov") {
+            const govId = props.govId !== '' ? props.govId : user?.governorateId;
+            return govId ? `current-reports-gov-${govId}` : null;
+        } else {
+            const cityId = props.cityId !== '' ? props.cityId : user?.cityId;
+            return cityId ? `current-reports-city-${cityId}` : null;
+        }
+    }, [props.type, props.govId, props.cityId, user?.governorateId, user?.cityId]);
+
+    const wsTopic = useMemo(() => {
+        if (props.type === "gov") {
+            const govId = props.govId !== '' ? props.govId : user?.governorateId;
+            return govId ? `/topic/ReportsPerDay/gov/${govId}` : null;
+        } else {
+            const cityId = props.cityId !== '' ? props.cityId : user?.cityId;
+            return cityId ? `/topic/ReportsPerDay/city/${cityId}` : null;
+        }
+    }, [props.type, props.govId, props.cityId, user?.governorateId, user?.cityId]);
 
     const transformData = (reportsData) => {
         return reportsData?.map((item) => [
@@ -91,6 +108,26 @@ export default function CurrentReports(props) {
             ],
         }));
     };
+
+    // WebSocket subscription callback
+    const handleWebSocketMessage = useMemo(() => (data, message, error) => {
+        if (error) {
+            console.error("Error processing WebSocket message for CurrentReports:", error);
+            return;
+        }
+        
+        setRealtimeData(data);
+        updateChartData(data);
+        // eslint-disable-next-line
+    }, []);
+
+    // eslint-disable-next-line
+    const { isConnected: wsConnected } = useWebSocketSubscription(
+        wsTopic,
+        handleWebSocketMessage,
+        [props.type, props.govId, props.cityId, user?.governorateId, user?.cityId],
+        wsTopicKey
+    );
 
     const fetchInitialData = async () => {
         try {
@@ -114,81 +151,18 @@ export default function CurrentReports(props) {
         }
     };
 
-    const setupWebSocketConnection = () => {
-        try {
-
-            const socketFactory = () => new SockJS(ws);
-            
-            const stompClient = Stomp.over(socketFactory);
-            
-            stompClient.debug = () => {};
-            
-            stompClient.connect({}, 
-                (frame) => {
-                    
-                    const topic = props.type === "gov" 
-                        ? `/topic/ReportsPerDepartment/gov/${props.govId !== '' ? props.govId : user?.governorateId}`
-                        : `/topic/ReportsPerDepartment/city/${props.cityId !== '' ? props.cityId : user?.cityId}`;
-                    
-                    const subscription = stompClient.subscribe(topic, (message) => {
-                        try {
-                            const newData = JSON.parse(message.body);
-                            updateChartData(newData);
-                        } catch (parseError) {
-                            console.error("Error parsing WebSocket message:", parseError);
-                        }
-                    });
-                    
-                    subscriptionRef.current = subscription;
-                },
-                (error) => {
-                    console.error("WebSocket connection error:", error);
-                }
-            );
-            
-            stompClientRef.current = stompClient;
-            
-        } catch (connectionError) {
-            console.error("Failed to setup WebSocket connection:", connectionError);
-        }
-    };
-
-    const cleanupWebSocketConnection = () => {
-        if (subscriptionRef.current) {
-            subscriptionRef.current.unsubscribe();
-            subscriptionRef.current = null;
-        }
-        
-        if (stompClientRef.current && stompClientRef.current.connected) {
-            stompClientRef.current.disconnect();
-            stompClientRef.current = null;
-        }
-    };
-
     useEffect(() => {
         fetchInitialData();
-        
-        setupWebSocketConnection();
-        
-        return () => {
-            cleanupWebSocketConnection();
-        };
         // eslint-disable-next-line
     }, [props.cityId, props.govId, props.type, user?.governorateId, user?.cityId]);
 
-    useEffect(() => {
-        return () => {
-            cleanupWebSocketConnection();
-        };
-    }, []);
-
-    if (loading) {
+    if (loading && !realtimeData) {
         return (
             <Skeleton count={1} className="dark:[--base-color:_#202020_!important] h-full py-4 dark:[--highlight-color:_#444_!important]"/>
         );
     }
 
-    if (error) {
+    if (error && !realtimeData) {
         return (
             <div className="h-full">
                 <div className="bg-white h-full dark:bg-[#191A1A] rounded-md px-2 py-4">
@@ -221,6 +195,7 @@ export default function CurrentReports(props) {
                     <h1 className="w-fit text-xl relative before:absolute before:h-[1px] before:w-[100%] before:bg-slate-300 before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0 dark:text-white before:dark:bg-[#363D3E]">
                         معدل الشكاوي
                     </h1>
+
                 </div>
                 <div className="h-full flex justify-center items-center flex-1">
                     <div className="flex-1">

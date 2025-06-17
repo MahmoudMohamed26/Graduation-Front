@@ -1,55 +1,99 @@
-import { useMemo, useContext } from "react";
+import { useMemo, useContext, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { Axios } from "../../../API/Axios";
 import { useQuery } from "@tanstack/react-query";
 import departmentMapper from "../../../helpers/DepartmentMapper";
 import Skeleton from "react-loading-skeleton";
 import { AuthContext } from "../../../Context/AuthContext";
+import { useWebSocketSubscription } from "../../../Context/WebSocketContex";
 
 export default function DepartReports(props) {
-  const { user } = useContext(AuthContext)
+  const { user } = useContext(AuthContext);
+  const [realtimeData, setRealtimeData] = useState(null);
+
+  const actualGovId = useMemo(() => {
+    return props.govId !== '' ? props.govId : user?.governorateId;
+  }, [props.govId, user?.governorateId]);
+
+  const actualCityId = useMemo(() => {
+    return props.cityId !== '' ? props.cityId : user?.cityId;
+  }, [props.cityId, user?.cityId]);
 
   const fetchData = async () => {
     let url = "";
-    url = props.type === "gov" ?
-    `/init/department/report/numbers/gov/${props.govId !== '' ? props.govId : user?.governorateId}`
-    : `/init/department/report/numbers/city/${props.cityId !== '' ? props.cityId : user?.cityId}`
+    url = props.type === "gov" 
+      ? `/init/department/report/numbers/gov/${actualGovId}`
+      : `/init/department/report/numbers/city/${actualCityId}`;
     const res = await Axios(url);
     return res.data;
   };
 
   const { data, isLoading, isSuccess } = useQuery({
-    queryKey: ["DepartReports", props.govId, props.cityId],
+    queryKey: ["DepartReports", props.type, actualGovId, actualCityId],
     queryFn: fetchData,
     staleTime: 1000 * 60,
     refetchOnWindowFocus: false,
+    enabled: props.type === "gov" ? !!actualGovId : !!actualCityId,
   });
 
+  const wsTopicKey = useMemo(() => {
+    if (props.type === "gov") {
+      return actualGovId ? `depart-reports-gov-${actualGovId}` : null;
+    } else {
+      return actualCityId ? `depart-reports-city-${actualCityId}` : null;
+    }
+  }, [props.type, actualGovId, actualCityId]);
+
+  const wsTopic = useMemo(() => {
+    if (props.type === "gov") {
+      return actualGovId ? `/topic/ReportsPerDepartment/gov/${actualGovId}` : null;
+    } else {
+      return actualCityId ? `/topic/ReportsPerDepartment/city/${actualCityId}` : null;
+    }
+  }, [props.type, actualGovId, actualCityId]);
+
+  const handleWebSocketMessage = useMemo(() => (data, message, error) => {
+    if (error) {
+      console.error("❌ Error processing WebSocket message for DepartReports:", error);
+      return;
+    }
+    setRealtimeData(data);
+  }, []);
+
+  // eslint-disable-next-line
+  const { isConnected: wsConnected } = useWebSocketSubscription(
+    wsTopic,
+    handleWebSocketMessage,
+    [props.type, actualGovId, actualCityId],
+    wsTopicKey
+  );
+
+  const currentData = realtimeData || data;
+
   const chartData = useMemo(() => {
-    if (!data || !isSuccess) return [];
+    if (!currentData || (!isSuccess && !realtimeData)) return [];
     
-    // Handle object format (your current data structure)
-    if (typeof data === 'object' && !Array.isArray(data)) {
-      return Object.entries(data).map(([department, reportCount]) => ({
+    if (typeof currentData === 'object' && !Array.isArray(currentData)) {
+      const processedData = Object.entries(currentData).map(([department, reportCount]) => ({
         x: departmentMapper(department),
         y: reportCount || 0,
       }));
+      return processedData;
     }
     
-    // Handle array format (your previous data structure)
-    const raw = Array.isArray(data)
-      ? data
-      : data?.data && Array.isArray(data.data)
-      ? data.data
+    const raw = Array.isArray(currentData)
+      ? currentData
+      : currentData?.data && Array.isArray(currentData.data)
+      ? currentData.data
       : [];
 
-    return raw.map((item) => ({
+    const processedData = raw.map((item) => ({
       x: departmentMapper(item.department),
       y: item.reportCount || 0,
     }));
-  }, [data, isSuccess]);
+    return processedData;
+  }, [currentData, isSuccess, realtimeData]);
 
-  // Fixed: Separate chartOptions from series data
   const chartOptions = useMemo(() => ({
     chart: {
       type: "bar",
@@ -101,9 +145,8 @@ export default function DepartReports(props) {
       enabled: true,
       theme: "dark",
     },
-  }), []); // Fixed: Remove chartData dependency to prevent constant re-creation
+  }), []);
 
-  // Fixed: Separate series data
   const chartSeries = useMemo(() => ([
     {
       name: "شكاوي الاقسام",
@@ -111,7 +154,7 @@ export default function DepartReports(props) {
     },
   ]), [chartData]);
 
-  if (isLoading) {
+  if (isLoading && !realtimeData) {
     return (
       <Skeleton
         count={1}
@@ -120,7 +163,7 @@ export default function DepartReports(props) {
     );
   }
 
-  if (!isSuccess || !data) {
+  if (!isSuccess && !realtimeData) {
     return (
       <div className="h-full">
         <div className="bg-white dark:bg-[#191A1A] rounded-md px-2 py-4 h-full">
@@ -136,9 +179,11 @@ export default function DepartReports(props) {
   return (
     <div className="h-full">
       <div className="bg-white dark:bg-[#191A1A] rounded-md px-2 py-4 h-full">
-        <h1 className="w-fit text-xl relative before:absolute before:h-[1px] before:w-[calc(100%)] before:bg-slate-300 before:dark:bg-[#363D3E] before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0 dark:text-white">
-          معدل شكاوي الاقسام
-        </h1>
+        <div className="flex justify-between items-center mb-2">
+          <h1 className="w-fit text-xl relative before:absolute before:h-[1px] before:w-[calc(100%)] before:bg-slate-300 before:dark:bg-[#363D3E] before:right-0 before:bottom-[-15px] after:absolute after:w-[40%] after:h-[2px] after:bg-[#725DFE] after:bottom-[-15px] after:right-0 dark:text-white">
+            معدل شكاوي الاقسام
+          </h1>
+        </div>
         <div className="mt-10 flex justify-center items-center">
           <div className="flex-1">
             <ReactApexChart

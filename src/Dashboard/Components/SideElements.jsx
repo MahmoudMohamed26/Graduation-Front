@@ -7,7 +7,6 @@ import { FaShieldHalved } from "react-icons/fa6";
 import { TbHomeStats } from "react-icons/tb";
 import { FiMapPin } from "react-icons/fi";
 import { MdOutlineReportProblem } from "react-icons/md";
-import { IoSettingsOutline } from "react-icons/io5";
 import { ImStatsDots } from "react-icons/im";
 
 const categories =[{
@@ -21,9 +20,6 @@ const categories =[{
     role: [2000 , 1999 , 1998]
 }, {
     name: 'العرض',
-    role: [2000 , 1999 , 1998]
-}, {
-    name: 'الاعدادات',
     role: [2000 , 1999 , 1998]
 }]
 
@@ -80,12 +76,6 @@ const Elements = [{
     category: 'العرض',
     to: '/dashboard/map',
     icon: <FiMapPin size={20} />,
-    role: [2000 , 1999 , 1998]
-}, {
-    name: 'الملف الشخصي',
-    category: 'الاعدادات',
-    to: '/dashboard/settings',
-    icon: <IoSettingsOutline size={20} />,
     role: [2000 , 1999 , 1998]
 }]
 

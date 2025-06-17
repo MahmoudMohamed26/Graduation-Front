@@ -7,21 +7,24 @@ import { AuthProvider } from './Context/AuthContext';
 import 'react-loading-skeleton/dist/skeleton.css'
 import './index.css';
 import { QueryClient , QueryClientProvider } from '@tanstack/react-query';
+import { WebSocketProvider } from './Context/WebSocketContex';
 
 const queryClient = new QueryClient()
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <AuthProvider>
-          <MenuContext>
-              <App />
-          </MenuContext>
-        </AuthProvider>
-      </Router>
-    </QueryClientProvider>
+    <WebSocketProvider wsEndpoint={process.env.REACT_APP_WS_URL}>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <AuthProvider>
+            <MenuContext>
+                <App />
+            </MenuContext>
+          </AuthProvider>
+        </Router>
+      </QueryClientProvider>
+    </WebSocketProvider>
   </React.StrictMode>
 );
 

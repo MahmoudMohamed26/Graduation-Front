@@ -46,7 +46,6 @@ function App() {
             <Route path="employees/:id" element={<EditEmployee />} />
           </Route>
           <Route path="map" element={<Map />} />
-          <Route path="settings" element={<h1>Profile</h1>} />
           <Route path="city-admins" element={<CityAdmins />} />
           <Route path="employees" element={<Employees />} />
           <Route path="employees/stats/:id" element={<SingleEmployee />} />

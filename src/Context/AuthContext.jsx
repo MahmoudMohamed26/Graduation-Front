@@ -14,7 +14,6 @@ export const AuthProvider = ({ children }) => {
         const res = await Axios.get('/user')
         setIsAuthenticated(true);
         setUser(res.data);
-        console.log(res.data);
       }catch(err) {
         setIsAuthenticated(false);
       }finally{
