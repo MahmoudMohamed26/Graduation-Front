@@ -8,7 +8,7 @@ The CivicEye admin dashboard is built using **React**, **Tailwind CSS**, and **S
 
 ![Screenshot_3](https://github.com/user-attachments/assets/b91cf1e3-a843-444f-956b-3248f83ad839)
 
-![Screenshot_5](https://github.com/user-attachments/assets/e1e4206b-0d90-4201-bfa3-136ec6a6947b)
+![Picture2](https://github.com/user-attachments/assets/9c419954-8fe5-4d7e-b7c4-5395d8e0bd57)
 
 ## 🧩 Features
 
