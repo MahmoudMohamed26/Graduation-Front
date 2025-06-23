@@ -73,8 +73,7 @@ The CivicEye admin dashboard is built using **React**, **Tailwind CSS**, and **S
 
 1. **Clone the repo**
    ```bash
-   git clone https://github.com/your-username/CivicEye-WebDashboard.git
-   cd CivicEye-WebDashboard
+   git clone https://github.com/MahmoudMohamed26/Graduation-Front.git
    
 2. **Install frontend dependencies**
    ```bash
