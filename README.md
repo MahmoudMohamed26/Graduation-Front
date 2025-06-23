@@ -69,11 +69,6 @@ The CivicEye admin dashboard is built using **React**, **Tailwind CSS**, and **S
 - WebSocket/STOMP
 - Maven
 
-### Others
-- Firebase for real-time database and auth integration
-- Docker for deployment
-- GitHub Actions (optional for CI/CD)
-
 ## 📦 Installation
 
 1. **Clone the repo**
